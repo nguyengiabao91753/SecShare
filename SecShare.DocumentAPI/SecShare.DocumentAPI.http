@@ -1,0 +1,6 @@
+@SecShare.DocumentAPI_HostAddress = http://localhost:5179
+
+GET {{SecShare.DocumentAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
