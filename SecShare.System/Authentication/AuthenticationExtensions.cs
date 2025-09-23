@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
-namespace SecShare.Common.Extensions;
+namespace SecShare.System.Extensions;
 
 public static class AuthenticationExtensions
 {
