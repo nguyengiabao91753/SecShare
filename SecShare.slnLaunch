@@ -1,0 +1,35 @@
+[
+  {
+    "Name": "New Profile",
+    "Projects": [
+      {
+        "Path": "Services\\SecShare.FileAPI\\SecShare.FileAPI.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "Services\\SecShare.AuthAPI\\AuthAPI.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "Services\\SecShare.DocumentAPI\\SecShare.DocumentAPI.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "Services\\SecShare.GroupAPI\\SecShare.GroupAPI.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "Services\\SecShare.PaymentAPI\\SecShare.PaymentAPI.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "Services\\SecShare.SubscriptionAPI\\SecShare.SubscriptionAPI.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "FrontEnd\\SecShare.Web\\SecShare.Web.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]

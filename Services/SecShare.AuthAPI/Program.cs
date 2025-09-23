@@ -1,4 +1,25 @@
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using SecShare.Core.Auth;
+using SecShare.Infrastructure.Data;
+using System;
+
 var builder = WebApplication.CreateBuilder(args);
+
+
+//Config DB
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection").ToString();
+
+builder.Services.AddDbContext<IdentityDbContext>(options =>
+   options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        b => b.MigrationsAssembly("SecShare.Infrastructure")
+    ));
+
+builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("ApiSettings:JwtOptions"));
+
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<IdentityDbContext>().AddDefaultTokenProviders();
+
 
 // Add services to the container.
 
@@ -18,8 +39,23 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
 
+ApplyMigration();
 app.Run();
+
+
+void ApplyMigration()
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var _db = scope.ServiceProvider.GetRequiredService<IdentityDbContext>();
+        if (_db.Database.GetPendingMigrations().Count() > 0)
+        {
+            _db.Database.Migrate();
+        }
+    }
+}
