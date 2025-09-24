@@ -14,7 +14,7 @@ public static partial class DependencyInjection
 
     public static void AddServiceSingleton(this IHostApplicationBuilder builder)
     {
-        builder.Services.AddSingleton<Class1>();
+       
     }
 
     public static void AddServiceScoped(this IHostApplicationBuilder builder)

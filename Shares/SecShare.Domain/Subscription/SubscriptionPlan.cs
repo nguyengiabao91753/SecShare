@@ -6,14 +6,12 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SecShare.Core.Subscription;
-public class SubscriptionPlan
+public class SubscriptionPlan : BaseClass.BaseClass
 {
-    [Key]
-    public Guid Id { get; set; }
+
     public string Name { get; set; }
     public string Description { get; set; }
     public decimal Price { get; set; }
     public long StorageLimitMB { get; set; }
     public int DurationInDays { get; set; }
-    public DateTime CreatedAt { get; set; }
 }

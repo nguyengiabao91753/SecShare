@@ -6,14 +6,11 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SecShare.Core.Document;
-public class PendingShare
+public class PendingShare : BaseClass.BaseClass
 {
-    [Key]
-    public Guid PendingId { get; set; }
     public Guid DocumentId { get; set; }
     public string SenderId { get; set; }
     public string RecipientEmail { get; set; }
     public byte[] AESKeyRaw { get; set; }
     public string Status { get; set; }
-    public DateTime CreatedAt { get; set; }
 }

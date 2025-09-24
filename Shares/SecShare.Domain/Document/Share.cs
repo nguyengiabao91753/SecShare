@@ -6,14 +6,11 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SecShare.Core.Document;
-public class Share
+public class Share : BaseClass.BaseClass
 {
-    [Key]
-    public Guid ShareId { get; set; }
     public Guid DocumentId { get; set; }
     public string SenderId { get; set; }
     public string ReceiverId { get; set; }
     public byte[] EncryptedAESKey { get; set; }
     public string Permissions { get; set; }
-    public DateTime CreatedAt { get; set; }
 }

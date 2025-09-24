@@ -9,7 +9,7 @@ namespace SecShare.Core;
 public class AuditLog
 {
     [Key]
-    public Guid AuditId { get; set; }
+    public Guid Id { get; set; }
     public string UserId { get; set; }
     public Guid? DocumentId { get; set; }
     public string Action { get; set; }
