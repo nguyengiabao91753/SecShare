@@ -1,0 +1,39 @@
+.sidebar-detail {
+  position: fixed;
+  top: 0;
+  right: -400px; /* ẩn ngoài màn hình */
+  width: 400px;
+  height: 100%;
+  background: #fff;
+  border-left: 1px solid #ddd;
+  box-shadow: -2px 0 6px rgba(0,0,0,0.1);
+  transition: right 0.3s ease-in-out;
+  z-index: 1050;
+}
+
+.sidebar-detail.show {
+  right: 0; /* trượt vào */
+}
+
+.file-header {
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+}
+
+.btn-lg-square {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+}
+
+h3.d-none.d-lg-inline-flex {
+    margin: 0;
+    line-height: 40px; /* Đảm bảo chiều cao khớp với nút */
+}
+
+.table tbody tr:hover .other-actions {
+  visibility: visible;
+}

@@ -7,7 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Shares\SecShare.Domain\SecShare.Core.csproj" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+	  <PackageReference Include="System.Net.Http.Json" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Shares\SecShare.Base\SecShare.Base.csproj" />
+    <ProjectReference Include="..\..\Shares\SecShare.Core\SecShare.Core.csproj" />
+    <ProjectReference Include="..\..\Shares\SecShare.Helper\SecShare.Helper.csproj" />
+	<ProjectReference Include="..\..\Shares\SecShare.System\SecShare.SystemConfig.csproj" />
   </ItemGroup>
 
 </Project>

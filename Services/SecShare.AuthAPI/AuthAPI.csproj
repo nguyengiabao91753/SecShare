@@ -24,11 +24,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Shares\SecShare.Base\SecShare.Base.csproj" />
+    <ProjectReference Include="..\..\Shares\SecShare.Core\SecShare.Core.csproj" />
     <ProjectReference Include="..\..\Shares\SecShare.Infrastructure\SecShare.Infrastructure.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Controllers\" />
+    <ProjectReference Include="..\..\Shares\SecShare.System\SecShare.SystemConfig.csproj" />
   </ItemGroup>
 
 </Project>

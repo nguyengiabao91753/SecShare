@@ -1,0 +1,67 @@
+.info-item {
+  padding: 12px 0;
+  border-bottom: 1px solid #eee;
+  transition: background 0.2s;
+}
+.info-item:hover {
+  background: #f9f9f9;
+}
+.info-label {
+  font-weight: 600;
+  color: #444;
+  margin-right: 6px;
+}
+.info-value {
+  color: #333;
+}
+.btn-edit {
+  border-radius: 50% !important;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, color 0.2s;
+}
+.btn-edit:hover {
+  background: #007bff;
+  color: #fff;
+}
+.btn-lg-square {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+}
+
+.file-header {
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+}
+
+/* Custom Tabs */
+.custom-tabs {
+  border-bottom: 1px solid #ddd;
+}
+
+.custom-tabs .nav-link {
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: #555;
+  font-weight: 500;
+  padding: 8px 16px;
+  transition: all 0.2s ease-in-out;
+}
+
+.custom-tabs .nav-link:hover {
+  color: #007bff;
+}
+
+.custom-tabs .nav-link.active {
+  color: #007bff;
+  background: #fff;
+  border-bottom: 2px solid #007bff;
+}
+

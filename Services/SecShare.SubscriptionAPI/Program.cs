@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using SecShare.Infrastructure.Data;
-using SecShare.System.Dependencies;
+using SecShare.SystemConfig.Dependencies;
 
 var builder = WebApplication.CreateBuilder(args);
 

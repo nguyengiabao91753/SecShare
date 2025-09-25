@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SecShare.Core.Auth;
 using SecShare.Infrastructure.Data;
+using SecShare.SystemConfig.Dependencies;
 using System;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,7 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 //Config DB
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection").ToString();
 
-builder.Services.AddDbContext<IdentityDbContext>(options =>
+builder.Services.AddDbContext<IdentityApplicationDbContext>(options =>
    options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection"),
         b => b.MigrationsAssembly("SecShare.Infrastructure")
@@ -18,10 +19,32 @@ builder.Services.AddDbContext<IdentityDbContext>(options =>
 
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("ApiSettings:JwtOptions"));
 
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<IdentityDbContext>().AddDefaultTokenProviders();
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<IdentityApplicationDbContext>().AddDefaultTokenProviders();
+
+
+// Config JWT Authentication 
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = "Bearer";
+    options.DefaultChallengeScheme = "Bearer";
+}).AddJwtBearer("Bearer", options =>
+{
+    options.Authority = builder.Configuration["ApiSettings:JwtOptions:Issuer"];
+    options.RequireHttpsMetadata = false;
+    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+    {
+        ValidateAudience = false
+    };
+});
 
 
 // Add services to the container.
+builder.AddServiceSingleton();
+builder.AddServiceScoped();
+builder.AddServiceTransient();
+
+
+
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -52,7 +75,7 @@ void ApplyMigration()
 {
     using (var scope = app.Services.CreateScope())
     {
-        var _db = scope.ServiceProvider.GetRequiredService<IdentityDbContext>();
+        var _db = scope.ServiceProvider.GetRequiredService<IdentityApplicationDbContext>();
         if (_db.Database.GetPendingMigrations().Count() > 0)
         {
             _db.Database.Migrate();

@@ -1,0 +1,39 @@
+.group-sidebar.collapsed {
+  width: 0 !important;
+  overflow: hidden;
+}
+.group-item.active {
+  background: #f0f0f0;
+}
+.border-bottom{
+    background-color: white;
+}
+/* Bo góc nhẹ cho input và nút trong sidebar */
+.group-sidebar .form-control,
+.group-sidebar .btn {
+  border-radius: 0.375rem;/* tương đương ~6px */
+}
+img{
+    width: 40px;
+    height: 40px;
+}
+.file-header {
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+}
+
+.btn-lg-square {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+}
+.input-group .btn {
+  border-radius: 0.375rem !important; /* Bo góc nhẹ cho nút */
+}
+
+.input-group .form-control {
+  border-radius: 0.375rem !important;
+}

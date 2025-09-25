@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SecShare.Domain\SecShare.Core.csproj" />
+    <ProjectReference Include="..\SecShare.Core\SecShare.Core.csproj" />
   </ItemGroup>
 
 </Project>

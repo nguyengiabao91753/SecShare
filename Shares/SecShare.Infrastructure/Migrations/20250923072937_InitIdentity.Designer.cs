@@ -11,7 +11,7 @@ using SecShare.Infrastructure.Data;
 
 namespace SecShare.Infrastructure.Migrations
 {
-    [DbContext(typeof(IdentityDbContext))]
+    [DbContext(typeof(IdentityApplicationDbContext))]
     [Migration("20250923072937_InitIdentity")]
     partial class InitIdentity
     {

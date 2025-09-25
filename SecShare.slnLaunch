@@ -29,6 +29,22 @@
       {
         "Path": "FrontEnd\\SecShare.Web\\SecShare.Web.csproj",
         "Action": "Start"
+      },
+      {
+        "Path": "Shares\\SecShare.System\\SecShare.SystemConfig.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "Shares\\SecShare.Base\\SecShare.Base.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "Shares\\SecShare.Core\\SecShare.Core.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "Shares\\SecShare.Helper\\SecShare.Helper.csproj",
+        "Action": "Start"
       }
     ]
   }

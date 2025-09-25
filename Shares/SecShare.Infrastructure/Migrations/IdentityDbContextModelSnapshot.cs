@@ -10,7 +10,7 @@ using SecShare.Infrastructure.Data;
 
 namespace SecShare.Infrastructure.Migrations
 {
-    [DbContext(typeof(IdentityDbContext))]
+    [DbContext(typeof(IdentityApplicationDbContext))]
     partial class IdentityDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
