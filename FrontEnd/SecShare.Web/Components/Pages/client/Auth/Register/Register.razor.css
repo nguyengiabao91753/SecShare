@@ -1,0 +1,56 @@
+﻿.card {
+    border: none;
+    border-radius: 12px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+
+.card-title {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-weight: 600;
+    font-size: 29px;
+}
+
+.form-control {
+    border-radius: 8px;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+    .form-control:focus {
+        border-color: #4b6cb7;
+        box-shadow: 0 0 0 0.2rem rgba(75, 108, 183, 0.25);
+    }
+
+.btn-primary {
+    background: linear-gradient(90deg, #4b6cb7, #182848);
+    border: none;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-weight: 500;
+}
+
+    .btn-primary:hover {
+        background: linear-gradient(90deg, #5e81ac, #1e3a8a);
+    }
+
+    .btn-primary:disabled {
+        background: #6c757d;
+        opacity: 0.65;
+    }
+
+.alert-danger {
+    border-radius: 8px;
+}
+
+@media (max-width: 576px) {
+    .card {
+        margin: 0 1rem;
+    }
+}
+
+.validation-message {
+    color: #ffffff !important;
+}

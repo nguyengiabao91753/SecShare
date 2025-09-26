@@ -4,13 +4,13 @@ using SecShare.Base.Auth;
 using SecShare.Core.Dtos;
 
 namespace AuthAPI.Controllers;
-[Route("api/[controller]")]
+[Route("api/auth/register")]
 [ApiController]
 public class RegisterController : ControllerBase
 {
-    private readonly IAuthService _authService;
+    private readonly IAuthAPIService _authService;
 
-    public RegisterController(IAuthService authService)
+    public RegisterController(IAuthAPIService authService)
     {
         _authService = authService;
     }

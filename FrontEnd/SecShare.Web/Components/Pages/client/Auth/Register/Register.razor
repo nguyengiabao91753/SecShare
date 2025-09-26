@@ -1,0 +1,92 @@
+﻿@page "/register"
+@rendermode InteractiveServer
+@using SecShare.Core.Dtos
+@using System.ComponentModel.DataAnnotations
+@inject NavigationManager Navigation
+
+@layout SecShare.Web.Components.Layout.EmptyLayout
+
+<div class="d-flex flex-column justify-content-center align-items-center min-vh-100" style="background: linear-gradient(135deg, #4b6cb7, #182848);">
+    <div class="text-center mb-4">
+        <img src="client/logo.png" alt="SecShare Logo" class="img-fluid" style="max-width: 150px;" />
+    </div>
+
+    <div class="card shadow-sm p-4" style="max-width: 400px; width: 100%;">
+        <div class="card-body">
+            <h2 class="card-title text-center mb-4" style="color: #1e3a8a;">Create your account</h2>
+
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <div class="alert alert-danger text-center mb-3 text-white">@errorMessage</div>
+            }
+
+            <EditForm EditContext="@editContext" OnValidSubmit="HandleRegister" FormName="RegisterForm">
+                <DataAnnotationsValidator />
+                <ValidationSummary class="alert text-left text-white" />
+
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <InputText id="username" @bind-Value="registerModel!.UserName" class="form-control" />
+                    <ValidationMessage class="text-left text-white" For="@(() => registerModel.UserName)" />
+                </div>
+
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <InputText id="email" @bind-Value="registerModel.Email" class="form-control" />
+                    <ValidationMessage class="text-left text-white" For="@(() => registerModel.Email)" />
+                </div>
+
+                <div class="mb-3">
+                    <label for="phone" class="form-label">Phone Number</label>
+                    <InputText id="phone" type="tel" @bind-Value="registerModel!.PhoneNumber" class="form-control" />
+                    <ValidationMessage class="text-left text-white" For="@(() => registerModel.PhoneNumber)" />
+                </div>
+
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <div class="input-group">
+                        <InputText id="password"
+                                   type="@(showPassword ? "text" : "password")"
+                                   @bind-Value="registerModel!.Password"
+                                   class="form-control" />
+                        <button type="button" class="btn btn-outline-secondary" @onclick="() => TogglePassword()">
+                            <i class="@(showPassword ? "fas fa-eye-slash" : "fas fa-eye")"></i>
+                        </button>
+                    </div>
+                    <ValidationMessage class="text-left text-white" For="@(() => registerModel.Password)" />
+                </div>
+
+                <div class="mb-4">
+                    <label for="confirm-password" class="form-label">Confirm Password</label>
+                    <div class="input-group">
+                        <InputText id="confirm-password"
+                                   type="@(showConfirmPassword ? "text" : "password")"
+                                   @bind-Value="registerModel!.ConfirmPassword"
+                                   class="form-control" />
+                        <button type="button" class="btn btn-outline-secondary" @onclick="() => ToggleConfirmPassword()">
+                            <i class="@(showConfirmPassword ? "fas fa-eye-slash" : "fas fa-eye")"></i>
+                        </button>
+                    </div>
+                    <ValidationMessage class="text-left text-white" For="@(() => registerModel.ConfirmPassword)" />
+                </div>
+
+
+                <button type="submit" class="btn btn-primary w-100 py-2" disabled="@isSubmitting">
+                    @if (isSubmitting)
+                    {
+                        <span>Registering...</span>
+                        <span class="spinner-border spinner-border-sm ms-2" role="status" aria-hidden="true"></span>
+                    }
+                    else
+                    {
+                        <span>Register</span>
+                    }
+                </button>
+            </EditForm>
+
+            <div class="text-center mt-3">
+                <small class="text-muted">Already have an account? <a href="/login" style="color: #4b6cb7;">Log in</a></small>
+            </div>
+        </div>
+    </div>
+</div>

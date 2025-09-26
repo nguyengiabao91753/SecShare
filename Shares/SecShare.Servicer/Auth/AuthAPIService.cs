@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using SecShare.Base.Auth;
 using SecShare.Core.Auth;
 using SecShare.Core.BaseClass;
 using SecShare.Core.Dtos;
@@ -10,14 +9,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SecShare.Base.Auth;
 
 namespace SecShare.Servicer.Auth;
-public class AuthService : IAuthService
+public class AuthAPIService : IAuthAPIService
 {
     private readonly IdentityApplicationDbContext _db;
     private readonly UserManager<ApplicationUser> _userManager;
 
-    public AuthService(IdentityApplicationDbContext db, UserManager<ApplicationUser> userManager)
+    public AuthAPIService(IdentityApplicationDbContext db, UserManager<ApplicationUser> userManager)
     {
         _db = db;
         _userManager = userManager;

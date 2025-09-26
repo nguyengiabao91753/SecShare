@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using SecShare.Base.Auth;
+using SecShare.Helper.Utils;
 using SecShare.Servicer.Auth;
 using SecShare.SystemConfig.Dependencies;
 using SecShare.Web.Components;
@@ -19,9 +20,12 @@ builder.Services.AddHttpClient();
 
 builder.Services.AddScoped<IBaseService, BaseService>();
 builder.Services.AddScoped<ITokenProvider, TokenProvider>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
+//Add API URL 
 
-
+SD.AuthAPIBase = builder.Configuration["ServiceUrls:AuthAPI"];
+//------------------------------------------------
 
 
 

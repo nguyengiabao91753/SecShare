@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 namespace SecShare.Helper.Utils;
 public class SD
 {
+
+    public static string AuthAPIBase { get; set; }
+
     public const string TokenCookie = "JWTToken";
     public enum ApiType
     {

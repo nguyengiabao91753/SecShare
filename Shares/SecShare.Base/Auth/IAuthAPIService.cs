@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SecShare.Base.Auth;
-public interface IAuthService
+public interface IAuthAPIService
 {
     Task<ResponseDTO> Register (RegistrationRequestDto registrationRequestDto);
 }
