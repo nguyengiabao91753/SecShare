@@ -28,7 +28,7 @@ public class BaseService : IBaseService
             //token
             if (withBearer)
             {
-                var token = _tokenProvider.GetToken();
+                var token = _tokenProvider.GetTokenAsync();
                 message.Headers.Add("Authorization", $"Bearer {token}");
             }
             message.RequestUri = new Uri(requestDto.Url);

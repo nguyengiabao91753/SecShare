@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace SecShare.Core.Auth;
 public class ApplicationUser : IdentityUser
 {
-    public byte[]? PublicKey { get; set; }
+    public string? PublicKey { get; set; }
 
     public byte[]? RsaPrivateKeyEncrypted { get; set; }
     

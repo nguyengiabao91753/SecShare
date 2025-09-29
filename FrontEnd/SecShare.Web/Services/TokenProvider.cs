@@ -1,30 +1,32 @@
-﻿using SecShare.Helper.Utils;
+﻿using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+using SecShare.Helper.Utils;
 using SecShare.Web.Services.IServices;
 
 namespace SecShare.Web.Services;
 
 public class TokenProvider : ITokenProvider
 {
-    private readonly IHttpContextAccessor _contextAccessor;
-    public TokenProvider(IHttpContextAccessor httpContextAccessor)
+    private readonly ProtectedSessionStorage _sessionStorage;
+    private const string TokenKey = "authToken";
+
+    public TokenProvider(ProtectedSessionStorage sessionStorage)
     {
-        _contextAccessor = httpContextAccessor;
-    }
-    public void ClearToken()
-    {
-        _contextAccessor.HttpContext?.Response.Cookies.Delete(SD.TokenCookie);
+        _sessionStorage = sessionStorage;
     }
 
-    public string? GetToken()
+    public async Task SetTokenAsync(string token)
     {
-        string token = null;
-        bool? hashToken = _contextAccessor.HttpContext?.Request.Cookies.TryGetValue(SD.TokenCookie, out token);
-
-        return hashToken is true ? token : null;
+        await _sessionStorage.SetAsync(TokenKey, token);
     }
 
-    public void SetToken(string token)
+    public async Task<string?> GetTokenAsync()
     {
-        _contextAccessor.HttpContext?.Response.Cookies.Append(SD.TokenCookie, token);
+        var result = await _sessionStorage.GetAsync<string>(TokenKey);
+        return result.Success ? result.Value : null;
+    }
+
+    public async Task ClearTokenAsync()
+    {
+        await _sessionStorage.DeleteAsync(TokenKey);
     }
 }
