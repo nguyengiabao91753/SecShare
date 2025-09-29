@@ -30,7 +30,7 @@ namespace SecShare.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    PublicKey = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    PublicKey = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RsaPrivateKeyEncrypted = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
                     StorageLimitMB = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
