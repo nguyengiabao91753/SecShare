@@ -24,6 +24,7 @@ public static partial class DependencyInjection
     {
         builder.Services.AddScoped<IAuthAPIService, AuthAPIService>();
 
+        builder.Services.AddScoped<IUserService, UserService>();
     }
 
     public static void AddServiceTransient(this IHostApplicationBuilder builder)
