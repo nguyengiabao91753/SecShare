@@ -1,4 +1,5 @@
 ﻿
+using SecShare.Core.Auth;
 using SecShare.Core.BaseClass;
 using SecShare.Core.Dtos;
 using System;
@@ -11,4 +12,6 @@ namespace SecShare.Base.Auth;
 public interface IAuthAPIService
 {
     Task<ResponseDTO> Register (RegistrationRequestDto registrationRequestDto);
+
+    Task<ResponseDTO> Login(LoginRequestDto loginRequestDto);
 }

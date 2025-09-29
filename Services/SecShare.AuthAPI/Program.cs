@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using SecShare.Core.Auth;
 using SecShare.Infrastructure.Data;
 using SecShare.SystemConfig.Dependencies;
+using SecShare.SystemConfig.Extensions;
 using System;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,23 +20,12 @@ builder.Services.AddDbContext<IdentityApplicationDbContext>(options =>
 
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("ApiSettings:JwtOptions"));
 
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<IdentityApplicationDbContext>().AddDefaultTokenProviders();
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+{
+    options.User.RequireUniqueEmail = true;
+}).AddEntityFrameworkStores<IdentityApplicationDbContext>().AddDefaultTokenProviders();
 
 
-// Config JWT Authentication 
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = "Bearer";
-    options.DefaultChallengeScheme = "Bearer";
-}).AddJwtBearer("Bearer", options =>
-{
-    options.Authority = builder.Configuration["ApiSettings:JwtOptions:Issuer"];
-    options.RequireHttpsMetadata = false;
-    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
-    {
-        ValidateAudience = false
-    };
-});
 
 
 // Add services to the container.
@@ -43,7 +33,8 @@ builder.AddServiceSingleton();
 builder.AddServiceScoped();
 builder.AddServiceTransient();
 
-
+//Config Verify Token
+builder.AddAppAuthentication();
 
 
 builder.Services.AddControllers();

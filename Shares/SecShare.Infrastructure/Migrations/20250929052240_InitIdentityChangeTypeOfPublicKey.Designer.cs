@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SecShare.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using SecShare.Infrastructure.Data;
 namespace SecShare.Infrastructure.Migrations
 {
     [DbContext(typeof(IdentityApplicationDbContext))]
-    partial class IdentityDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250929052240_InitIdentityChangeTypeOfPublicKey")]
+    partial class InitIdentityChangeTypeOfPublicKey
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

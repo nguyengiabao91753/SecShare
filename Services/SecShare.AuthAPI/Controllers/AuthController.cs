@@ -3,28 +3,36 @@ using Microsoft.AspNetCore.Mvc;
 using SecShare.Base.Auth;
 using SecShare.Core.Dtos;
 
-namespace AuthAPI.Controllers
+namespace AuthAPI.Controllers;
+[Route("api/auth/")]
+[ApiController]
+public class AuthController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class AuthController : ControllerBase
+    private readonly IAuthAPIService _authService;
+
+    public AuthController(IAuthAPIService authService)
     {
-        private readonly IUserService _userService;
+        _authService = authService;
+    }
 
-        public AuthController(IUserService userService)
+    [HttpPost("register")]
+    public async Task<IActionResult> Register([FromBody] RegistrationRequestDto registrationRequestDto)
+    {
+        var response = await _authService.Register(registrationRequestDto);
+        if (response.IsSuccess)
         {
-            _userService = userService;
+            return Ok(response);
         }
-
-        [HttpGet("getUserInfor")]
-        public async Task<IActionResult> GetUserInfor(string UserId)
+        return BadRequest(response);
+    }
+    [HttpPost("login")]
+    public async Task<IActionResult> Login([FromBody] LoginRequestDto loginRequestDto)
+    {
+        var response = await _authService.Login(loginRequestDto);
+        if (!response.IsSuccess)
         {
-            var response = await _userService.getUserInfor(UserId);
-            if (response.IsSuccess)
-            {
-                return Ok(response);
-            }
-            return BadRequest(response);
+            return Unauthorized(response);
         }
+        return Ok(response);
     }
 }

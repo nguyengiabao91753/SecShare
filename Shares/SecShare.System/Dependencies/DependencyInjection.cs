@@ -23,6 +23,7 @@ public static partial class DependencyInjection
     public static void AddServiceScoped(this IHostApplicationBuilder builder)
     {
         builder.Services.AddScoped<IAuthAPIService, AuthAPIService>();
+        builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 
         builder.Services.AddScoped<IUserService, UserService>();
     }

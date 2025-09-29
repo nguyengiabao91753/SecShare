@@ -40,7 +40,7 @@ public partial class Register
                 return;
             }
 
-            Navigation.NavigateTo("/");
+            Navigation.NavigateTo("/login");
         }
         finally
         {
