@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SecShare.Base.Auth;
 using SecShare.Core.Dtos;
+using SecShare.Servicer.Auth;
 
 namespace AuthAPI.Controllers;
 [Route("api/auth/")]
@@ -9,10 +10,12 @@ namespace AuthAPI.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly IAuthAPIService _authService;
+    private readonly IUserService _userService;
 
-    public AuthController(IAuthAPIService authService)
+    public AuthController(IAuthAPIService authService, IUserService userService)
     {
         _authService = authService;
+        _userService = userService;
     }
 
     [HttpPost("register")]
@@ -34,5 +37,16 @@ public class AuthController : ControllerBase
             return Unauthorized(response);
         }
         return Ok(response);
+    }
+
+    [HttpGet("getUserInfor")]
+    public async Task<IActionResult> GetUserInfor(string UserId)
+    {
+        var response = await _userService.getUserInfor(UserId);
+        if (response.IsSuccess)
+        {
+            return Ok(response);
+        }
+        return BadRequest(response);
     }
 }
