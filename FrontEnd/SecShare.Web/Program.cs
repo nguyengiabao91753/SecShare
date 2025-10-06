@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using SecShare.Base.Auth;
 using SecShare.Helper.Utils;
@@ -7,6 +7,7 @@ using SecShare.SystemConfig.Dependencies;
 using SecShare.Web.Components;
 using SecShare.Web.Services;
 using SecShare.Web.Services.IServices;
+using SecShare.Web.Services.IServices.IUserServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +28,7 @@ builder.Services.AddHttpClient();
 
 // Add HttpClient
 builder.Services.AddHttpClient<IAuthService, AuthService>();
+builder.Services.AddHttpClient<IBaseService, BaseService>();
 
 //---------------------------------------------------------
 //Add Services
@@ -35,6 +37,8 @@ builder.Services.AddScoped<IBaseService, BaseService>();
 builder.Services.AddScoped<ITokenProvider, TokenProvider>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ProtectedSessionStorage>();
+builder.Services.AddScoped<IUserService, UserService>();
+
 //----------------------------------------------------------
 //Add API URL 
 
@@ -66,6 +70,8 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseAntiforgery();
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();

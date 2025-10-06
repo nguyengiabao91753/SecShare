@@ -13,9 +13,10 @@ public class BaseService : IBaseService
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly ITokenProvider _tokenProvider;
 
-    public BaseService(IHttpClientFactory httpClientFactory)
+    public BaseService(IHttpClientFactory httpClientFactory, ITokenProvider tokenProvider)
     {
         _httpClientFactory = httpClientFactory;
+        _tokenProvider = tokenProvider;
     }
 
     public async Task<ResponseDTO?> SendAsync(RequestDTO requestDto, bool withBearer = true)
@@ -28,7 +29,7 @@ public class BaseService : IBaseService
             //token
             if (withBearer)
             {
-                var token = _tokenProvider.GetTokenAsync();
+                var token = await _tokenProvider.GetTokenAsync();
                 message.Headers.Add("Authorization", $"Bearer {token}");
             }
             message.RequestUri = new Uri(requestDto.Url);
