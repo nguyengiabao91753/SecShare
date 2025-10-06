@@ -11,5 +11,7 @@ namespace SecShare.Base.Document;
 public interface IDocumentAPIService
 {
     Task<ResponseDTO> UploadMyFileAsync(UploadMyFileDto uploadMyFile);
-    Task<ResponseDTO> ShareFileAsync(Share share);
+    Task<ResponseDTO> ShareFileAsync(ShareFileDto share, string UserId);
+
+    Task<ResponseDTO> ReadFile(string DocumentId, string UserId);
 }

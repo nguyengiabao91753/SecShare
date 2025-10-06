@@ -29,15 +29,15 @@ public class DocumentAPIService : IDocumentAPIService
         _userManager = userManager;
     }
 
-    public async Task<ResponseDTO> ShareFileAsync(Share share)
+    public async Task<ResponseDTO> ShareFileAsync(ShareFileDto share, string UserId)
     {
-        if(share.ReceiverId == null)
+        if(share.ReceiverEmail == null)
         {
             return new ResponseDTO
             {
                 IsSuccess = false,
                 Code = "-1",
-                Message = "ReceiverId is required"
+                Message = "Receiver is required"
             };
         }
         if(share.DocumentId == null)
@@ -49,7 +49,7 @@ public class DocumentAPIService : IDocumentAPIService
                 Message = "DocumentId is required"
             };
         }
-        var sender = await _userManager.FindByIdAsync(share.SenderId);
+        var sender = await _userManager.FindByIdAsync(UserId);
         if (sender == null)
         {
             return new ResponseDTO
@@ -59,7 +59,7 @@ public class DocumentAPIService : IDocumentAPIService
                 Message = "Sender not found!"
             };
         }
-        var receiver = await _userManager.FindByIdAsync(share.ReceiverId);
+        var receiver = await _userManager.FindByEmailAsync(share.ReceiverEmail);
         if (receiver == null)
         {
             return new ResponseDTO
@@ -72,7 +72,7 @@ public class DocumentAPIService : IDocumentAPIService
 
         var document = await _db.Documents.FindAsync(share.DocumentId);
         var origirinalShare = await _db.Shares
-            .Where(s => s.DocumentId == share.DocumentId && s.ReceiverId == share.SenderId).FirstOrDefaultAsync();
+            .Where(s => s.DocumentId == share.DocumentId && s.ReceiverId == UserId).FirstOrDefaultAsync();
         if (document == null || origirinalShare == null)
         {
             return new ResponseDTO
@@ -90,8 +90,8 @@ public class DocumentAPIService : IDocumentAPIService
             var newShare = new Share
             {
                 DocumentId = share.DocumentId,
-                SenderId = share.SenderId,
-                ReceiverId = share.ReceiverId,
+                SenderId = UserId,
+                ReceiverId = receiver.Id,
                 EncryptedAESKey = encryptedKey,
                 Permissions = share.Permissions
             };
@@ -140,8 +140,8 @@ public class DocumentAPIService : IDocumentAPIService
         }
 
         using var transaction = await _db.Database.BeginTransactionAsync();
-        var filePath = await _cloudinaryService.UploadFileAsync(uploadMyFile.AttachFile.File, fileFolder: user.Id);
-        ClouDinaryResult clouDinaryResult = (ClouDinaryResult)filePath.Result;
+        //var filePath = await _cloudinaryService.UploadFileAsync(uploadMyFile.AttachFile.File, fileFolder: user.Id);
+        //ClouDinaryResult clouDinaryResult = (ClouDinaryResult)filePath.Result;
         try
         {
             var (aesKey, iv) = AESHelper.GenerateAESKey();
@@ -154,7 +154,7 @@ public class DocumentAPIService : IDocumentAPIService
                 OwnerId = uploadMyFile.UserId,
                 FileName = uploadMyFile.AttachFile.FileName,
                 FileSize = uploadMyFile.AttachFile.File.Length,
-                FilePath = clouDinaryResult.Url + '*' + clouDinaryResult.PublicId,
+                FilePath =" ",
                 Ciphertext = cipherText,
                 IV = Convert.ToBase64String(iv),
 
@@ -185,7 +185,7 @@ public class DocumentAPIService : IDocumentAPIService
         catch (Exception ex)
         {
             await transaction.RollbackAsync();
-            await _cloudinaryService.DeleteFileAsync(clouDinaryResult.PublicId);
+            //await _cloudinaryService.DeleteFileAsync(clouDinaryResult.PublicId);
             return new ResponseDTO
             {
                 IsSuccess = false,

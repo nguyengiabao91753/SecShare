@@ -23,13 +23,16 @@ public static partial class DependencyInjection
     {
        
     }
-
-    public static void AddServiceScoped(this IHostApplicationBuilder builder)
+    public static void AddAuthServiceScoped(this IHostApplicationBuilder builder)
     {
         builder.Services.AddScoped<IAuthAPIService, AuthAPIService>();
-        builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 
         builder.Services.AddScoped<IUserAPIService, UserAPIService>();
+        builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+    }
+    public static void AddServiceScoped(this IHostApplicationBuilder builder)
+    {
+       
         builder.Services.AddScoped<IClouDinaryService, ClouDinaryService>();
         builder.Services.AddScoped<IDocumentAPIService, DocumentAPIService>();
     }
