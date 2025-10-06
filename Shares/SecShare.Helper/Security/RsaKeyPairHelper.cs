@@ -65,7 +65,7 @@ public static class RsaKeyPairHelper
     // ========================
     // Decrypt private key (AES)
     // ========================
-    private static byte[] DecryptPrivateKey(byte[] encryptedData, string password)
+    public static byte[] DecryptPrivateKey(byte[] encryptedData, string password)
     {
         
 
@@ -100,5 +100,30 @@ public static class RsaKeyPairHelper
         }
         sb.AppendLine($"-----END {label}-----");
         return sb.ToString();
+    }
+
+
+    /// <summary>
+    /// Mã hóa AES key bằng PublicKey (dùng khi share cho Receiver).
+    /// </summary>
+    public static byte[] EncryptAESKey(byte[] aesKey, string publicKeyPem)
+    {
+        using (var rsa = RSA.Create())
+        {
+            rsa.ImportFromPem(publicKeyPem);
+            return rsa.Encrypt(aesKey, RSAEncryptionPadding.OaepSHA256);
+        }
+    }
+
+    /// <summary>
+    /// Giải mã AES key bằng PrivateKey (của Receiver).
+    /// </summary>
+    public static byte[] DecryptAESKey(byte[] encryptedAesKey, byte[] privateKey)
+    {
+        using (var rsa = RSA.Create())
+        {
+            rsa.ImportPkcs8PrivateKey(privateKey, out _);
+            return rsa.Decrypt(encryptedAesKey, RSAEncryptionPadding.OaepSHA256);
+        }
     }
 }
