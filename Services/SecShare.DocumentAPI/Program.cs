@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using SecShare.Infrastructure.Data;
+using SecShare.SystemConfig.Dependencies;
+using SecShare.SystemConfig.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +15,12 @@ builder.Services.AddDbContext<SecShareDbContext>(options =>
 
 
 // Add services to the container.
+builder.AddServiceSingleton();
+builder.AddServiceScoped();
+builder.AddServiceTransient();
+
+//Config Verify Token
+builder.AddAppAuthentication();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

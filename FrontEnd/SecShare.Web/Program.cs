@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using SecShare.Base.Auth;
 using SecShare.Helper.Utils;
@@ -14,7 +14,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 
-
+// Cấu hình Map Assembly
+builder.Services.AddRazorComponents()
+    .AddInteractiveServerComponents();
 
 
 
