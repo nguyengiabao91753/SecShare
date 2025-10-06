@@ -9,6 +9,10 @@
       {
         "Path": "FrontEnd\\SecShare.Web\\SecShare.Web.csproj",
         "Action": "Start"
+      },
+      {
+        "Path": "Services\\SecShare.FileAPI\\SecShare.FileAPI.csproj",
+        "Action": "Start"
       }
     ]
   }

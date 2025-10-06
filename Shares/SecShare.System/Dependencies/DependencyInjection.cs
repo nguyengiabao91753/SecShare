@@ -28,6 +28,8 @@ public static partial class DependencyInjection
     {
         builder.Services.AddScoped<IAuthAPIService, AuthAPIService>();
         builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+
+        builder.Services.AddScoped<IUserAPIService, UserAPIService>();
         builder.Services.AddScoped<IClouDinaryService, ClouDinaryService>();
         builder.Services.AddScoped<IDocumentAPIService, DocumentAPIService>();
     }
