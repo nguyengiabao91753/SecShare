@@ -8,7 +8,11 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SecShare.Base.Auth;
+using SecShare.Base.Document;
+using SecShare.Base.File;
 using SecShare.Servicer.Auth;
+using SecShare.Servicer.Document;
+using SecShare.Servicer.File;
 
 
 namespace SecShare.SystemConfig.Dependencies;
@@ -24,6 +28,8 @@ public static partial class DependencyInjection
     {
         builder.Services.AddScoped<IAuthAPIService, AuthAPIService>();
         builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+        builder.Services.AddScoped<IClouDinaryService, ClouDinaryService>();
+        builder.Services.AddScoped<IDocumentAPIService, DocumentAPIService>();
     }
 
     public static void AddServiceTransient(this IHostApplicationBuilder builder)
