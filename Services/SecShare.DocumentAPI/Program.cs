@@ -1,5 +1,8 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using SecShare.Core.Auth;
 using SecShare.Infrastructure.Data;
+using SecShare.SystemConfig.Authentication;
 using SecShare.SystemConfig.Dependencies;
 using SecShare.SystemConfig.Extensions;
 
@@ -14,6 +17,19 @@ builder.Services.AddDbContext<SecShareDbContext>(options =>
     ));
 
 
+builder.Services.AddDbContext<IdentityApplicationDbContext>(options =>
+   options.UseSqlServer(
+        builder.Configuration.GetConnectionString("AuthConnection"),
+        b => b.MigrationsAssembly("SecShare.Infrastructure")
+    ));
+
+
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+{
+    options.User.RequireUniqueEmail = true;
+}).AddEntityFrameworkStores<IdentityApplicationDbContext>().AddDefaultTokenProviders();
+
+
 // Add services to the container.
 builder.AddServiceSingleton();
 builder.AddServiceScoped();
@@ -25,8 +41,8 @@ builder.AddAppAuthentication();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
+builder.AddSwaggerWithJWT();
+builder.Services.AddAuthorization();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
