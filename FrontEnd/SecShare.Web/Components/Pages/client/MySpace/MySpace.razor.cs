@@ -31,6 +31,8 @@ public partial class MySpace
     private ShareFileDto shareFileDto { get; set; } = new();
     [SupplyParameterFromForm]
     private List<DocumentDto> listFiles { get; set; } = new();
+    [SupplyParameterFromForm]
+    private List<UserDto> listUsers { get; set; } = new();
 
     private EditContext? editContext;
     private EditContext? editContextShare;
@@ -56,6 +58,8 @@ public partial class MySpace
 
             var rs = await _documentService.ListFiles();
             listFiles = JsonConvert.DeserializeObject<List<DocumentDto>>(Convert.ToString(rs.Result));
+
+            
 
             StateHasChanged(); // cập nhật UI
         }
@@ -180,10 +184,11 @@ public partial class MySpace
     /// <summary>
     /// Mở Sidebar và load chi tiết file
     /// </summary>
-    private void OpenSidebar(DocumentDto file)
+    private async Task OpenSidebar(DocumentDto file)
     {
         selectedFile = file;
         isSidebarOpen = true;
+        await LoadUserShare();
     }
 
     /// <summary>
@@ -216,4 +221,10 @@ public partial class MySpace
     }
     public void Dispose() => _isDisposed = true;
 
+
+    private async Task LoadUserShare()
+    {
+        var us = await _documentService.GetListUsersShared(selectedFile.Id.ToString());
+        listUsers = JsonConvert.DeserializeObject<List<UserDto>>(Convert.ToString(us.Result));
+    }
 }

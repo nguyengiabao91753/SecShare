@@ -11,5 +11,7 @@ public interface IDocumentService
 
     Task<ResponseDTO?> ListFiles();
 
-    
+    Task<ResponseDTO?> GetListUsersShared(string docId);
+
+
 }

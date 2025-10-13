@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using SecShare.Base.Document;
 using SecShare.Core.Dtos;
+using SecShare.DocumentAPI.Services.IService;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
@@ -13,10 +15,14 @@ namespace SecShare.DocumentAPI.Controllers;
 public class DocumentController : ControllerBase
 {
     private readonly IDocumentAPIService _documentAPIService;
-    public DocumentController(IDocumentAPIService documentAPIService)
+    private readonly IUServiceConnect _userService;
+
+    public DocumentController(IDocumentAPIService documentAPIService, IUServiceConnect userService)
     {
         _documentAPIService = documentAPIService;
+        _userService = userService;
     }
+
     // GET: api/<DocumentController>
     [Authorize]
     [HttpGet("getListDoc")]
@@ -24,19 +30,33 @@ public class DocumentController : ControllerBase
     {
         var UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         var rs = await _documentAPIService.ListUserFileAsync(UserId!);
-        if(rs.IsSuccess)
+        if (rs.IsSuccess)
         {
+
             return Ok(rs);
         }
         return BadRequest(rs);
     }
 
-    //// GET api/<DocumentController>/5
-    //[HttpGet("{id}")]
-    //public string Get(int id)
-    //{
-    //    return "value";
-    //}
+    [Authorize]
+    [HttpGet("getListUsersShare/{docId}")]
+    public async Task<IActionResult> GetListUsersShared( string docId)
+    {
+        var UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var rs = await _documentAPIService.GetListUsersShared(UserId!,Guid.Parse(docId));
+        if (rs.IsSuccess)
+        {
+            var userIds = (IEnumerable<string>)rs.Result!;
+            var userRs = await _userService.GetUsersShared(userIds);
+            if (userRs.IsSuccess)
+            {
+                IEnumerable<UserDto> userList = JsonConvert.DeserializeObject<IEnumerable<UserDto>>(Convert.ToString(userRs.Result!));
+                rs.Result = userList;
+            }
+            return Ok(rs);
+        }
+        return BadRequest(rs);
+    }
 
     //POST api/<DocumentController>
     [Authorize]

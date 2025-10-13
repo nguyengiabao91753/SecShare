@@ -15,5 +15,7 @@ namespace SecShare.Base.Auth
         Task<ResponseDTO> changePasswordAsync(ChangePasswordDto changePasswordDto, string UserId);
 
         Task<ResponseDTO> updateInformation(UserDto user, string userid);
+
+        Task<ResponseDTO> getAllUsersShared(IEnumerable<string> listUserId);
     }
 }

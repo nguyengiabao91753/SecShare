@@ -289,4 +289,17 @@ public class DocumentAPIService : IDocumentAPIService
             };
         }
     }
+
+    public async Task<ResponseDTO> GetListUsersShared(string UserId, Guid docId)
+    {
+        var rs = new ResponseDTO();
+        var receiverIds = await _db.Shares
+                        .Where(s => s.SenderId == UserId && s.DocumentId == docId && s.ReceiverId != UserId)
+                        .Select(s => s.ReceiverId)
+                        .ToListAsync();
+
+        rs.Result = receiverIds;
+        rs.IsSuccess = true;
+        return rs;
+    }
 }

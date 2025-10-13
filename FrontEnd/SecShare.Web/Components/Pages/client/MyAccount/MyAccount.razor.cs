@@ -58,7 +58,8 @@ namespace SecShare.Web.Components.Pages.client.MyAccount
         private async Task HandleUpdate()
         {
             isSubmitting = true;
-            try { 
+            try
+            {
                 var result = await _userService.updateInformation(userModel);
                 if (!result.IsSuccess)
                 {
@@ -84,7 +85,7 @@ namespace SecShare.Web.Components.Pages.client.MyAccount
                 isSubmitting = false;
 
             }
-}
+        }
 
         private async Task HandleChangePassword()
         {
@@ -135,5 +136,7 @@ namespace SecShare.Web.Components.Pages.client.MyAccount
             }
         }
 
-    }  
+
+
+    }
 }

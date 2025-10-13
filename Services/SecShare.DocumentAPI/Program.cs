@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SecShare.Core.Auth;
+using SecShare.DocumentAPI.Services;
+using SecShare.DocumentAPI.Services.IService;
+using SecShare.Helper.Utils;
 using SecShare.Infrastructure.Data;
 using SecShare.SystemConfig.Authentication;
 using SecShare.SystemConfig.Dependencies;
@@ -33,7 +36,11 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 }).AddEntityFrameworkStores<IdentityApplicationDbContext>().AddDefaultTokenProviders();
 
 
+SD.AuthAPIBase = builder.Configuration["ServiceUrls:AuthAPI"];
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddHttpClient();
 // Add services to the container.
+builder.Services.AddScoped<IUServiceConnect, UServiceConnect>();
 builder.AddServiceSingleton();
 builder.AddServiceScoped();
 builder.AddServiceTransient();

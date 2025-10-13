@@ -13,6 +13,17 @@ public class DocumentService : IDocumentService
         _baseService = baseService;
     }
 
+    public async Task<ResponseDTO?> GetListUsersShared(string docId)
+    {
+        return await _baseService.SendAsync(new RequestDTO()
+        {
+            ApiType = SD.ApiType.GET,
+            Data = docId,
+            Url = SD.DocumentAPIBase + $"/api/document/getListUsersShare/{docId}"
+
+        }, withBearer: true);
+    }
+
     public async Task<ResponseDTO?> ListFiles()
     {
         return await _baseService.SendAsync(new RequestDTO()

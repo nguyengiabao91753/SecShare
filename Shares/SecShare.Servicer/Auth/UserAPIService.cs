@@ -120,6 +120,35 @@ namespace SecShare.Servicer.Auth
             }
         }
 
+        public async Task<ResponseDTO> getAllUsersShared(IEnumerable<string> listUserId)
+        {
+            var rs = new ResponseDTO();
+            try
+            {
+                var users = _db.Users
+                    .Where(u => listUserId.Contains(u.Id))
+                    .Select(u => new UserDto
+                    {
+                        ID = u.Id,
+                        Name = u.UserName,
+                        Email = u.Email,
+                        PhoneNumber = u.PhoneNumber
+                    }).ToList();
+                rs.IsSuccess = true;
+                rs.Code = "0";
+                rs.Result = users;
+            }
+            catch (Exception ex)
+            {
+                rs.IsSuccess = false;
+                rs.Code = "-1";
+                rs.Message = ex.Message;
+                rs.Result = null;
+            }
+            
+            return rs;
+        }
+
         public async Task<ResponseDTO> getUserInfor(string userid)
         {
             
