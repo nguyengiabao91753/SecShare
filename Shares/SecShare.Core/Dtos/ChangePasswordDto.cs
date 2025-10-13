@@ -9,15 +9,15 @@ namespace SecShare.Core.Dtos
 {
     public class ChangePasswordDto
     {
-        [Required(ErrorMessage = "Mật khẩu cũ là bắt buộc")]
+        [Required(ErrorMessage = "Old password is required!")]
         public string OldPassword { get; set; }
 
-        [Required(ErrorMessage = "Mật khẩu mới là bắt buộc")]
-        [MinLength(6, ErrorMessage = "Mật khẩu phải có ít nhất 6 ký tự")]
+        [Required(ErrorMessage = "New password is required!")]
+        [MinLength(6, ErrorMessage = "New password must be at least 6 characters")]
         public string NewPassword { get; set; }
 
-        [Required(ErrorMessage = "Xác nhận mật khẩu là bắt buộc")]
-        [Compare("NewPassword", ErrorMessage = "Xác nhận mật khẩu không khớp")]
+        [Required(ErrorMessage = "Confirm password is required!")]
+        [Compare("NewPassword", ErrorMessage = "Confirm password does not match")]
         public string ConfirmPassword { get; set; }
 
     }

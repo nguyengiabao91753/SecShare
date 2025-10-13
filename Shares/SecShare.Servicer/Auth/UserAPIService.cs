@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using SecShare.Base.Auth;
 using SecShare.Core.Auth;
@@ -26,75 +27,96 @@ namespace SecShare.Servicer.Auth
 
         public async Task<ResponseDTO> changePasswordAsync(ChangePasswordDto changePasswordDto, string UserId)
         {
-            if (string.IsNullOrEmpty(UserId))
+            using (var transaction = await _db.Database.BeginTransactionAsync())
             {
-                return new ResponseDTO
-                {
-                    IsSuccess = false,
-                    Code = Convert.ToString(-1),
-                    Message = "User not found"
-                };
-            }
-
-            try
-            {
-                var user = await _userManager.FindByIdAsync(UserId);
-                if (user == null)
+                if (string.IsNullOrEmpty(UserId))
                 {
                     return new ResponseDTO
                     {
                         IsSuccess = false,
                         Code = Convert.ToString(-1),
-                        Message = "User not found!"
+                        Message = "User not found"
                     };
                 }
 
-                var isValid = await _userManager.CheckPasswordAsync(user, changePasswordDto.OldPassword);
-
-                if (!isValid)
+                try
                 {
+                    var user = await _userManager.FindByIdAsync(UserId);
+                    if (user == null)
+                    {
+                        return new ResponseDTO
+                        {
+                            IsSuccess = false,
+                            Code = Convert.ToString(-1),
+                            Message = "User not found!"
+                        };
+                    }
+
+                    var isValid = await _userManager.CheckPasswordAsync(user, changePasswordDto.OldPassword);
+
+                    if (!isValid)
+                    {
+                        await transaction.RollbackAsync();
+                        return new ResponseDTO
+                        {
+                            IsSuccess = false,
+                            Code = Convert.ToString(-1),
+                            Message = "Old password is incorrect!",
+                            Result = null
+                        };
+                    }
+
+                    if (changePasswordDto.OldPassword.Equals(changePasswordDto.NewPassword))
+                    {
+                        await transaction.RollbackAsync();
+                        return new ResponseDTO
+                        {
+                            IsSuccess = false,
+                            Code = Convert.ToString(-1),
+                            Message = "New password must not be the same as old password!",
+                            Result = null
+                        };
+                    }
+                    var oldPassHash = user.PasswordHash;
+                    var result = await _userManager.ChangePasswordAsync(user, changePasswordDto.OldPassword, changePasswordDto.NewPassword);
+                    if (result.Succeeded && user.Id != null)
+                    {
+                        // Mã hóa lại PK với Pass mới
+                        var newPKENCrypted = RsaKeyPairHelper.ReEncryptPrivateKey(user.RsaPrivateKeyEncrypted, oldPassHash, user.PasswordHash);
+                        user.RsaPrivateKeyEncrypted = newPKENCrypted;
+                        await _userManager.UpdateAsync(user);
+                        await transaction.CommitAsync();
+                        return new ResponseDTO
+                        {
+                            IsSuccess = true,
+                            Message = "Change Password Successfully!",
+                            Code = "0",
+                            Result = user.Id
+                        };
+                    }
+                    else
+                    {
+                        await transaction.RollbackAsync();
+                        return new ResponseDTO
+                        {
+                            IsSuccess = false,
+                            Message = string.Join(", ", result.Errors.FirstOrDefault().Description),
+                            Code = "-1",
+                            Result = null
+                        };
+                    }
+                }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
                     return new ResponseDTO
                     {
                         IsSuccess = false,
                         Code = Convert.ToString(-1),
-                        Message = "Old password is incorrect!",
+                        Message = ex.Message,
                         Result = null
                     };
                 }
-
-                var result = await _userManager.ChangePasswordAsync(user, changePasswordDto.OldPassword, changePasswordDto.NewPassword);
-                if (result.Succeeded && user.Id != null)
-                {
-                    // Tạo cặp khóa RSA
-                    (user.PublicKey, user.RsaPrivateKeyEncrypted) = RsaKeyPairHelper.GenerateKeyPair(user.PasswordHash);
-                    await _userManager.UpdateAsync(user);
-                    return new ResponseDTO
-                    {
-                        IsSuccess = true,
-                        Message = "Change Password Successfully!",
-                        Code = "0",
-                        Result = user.Id
-                    };
-                }
-                else
-                {
-                    return new ResponseDTO
-                    {
-                        IsSuccess = false,
-                        Message = string.Join(", ", result.Errors.FirstOrDefault().Description),
-                        Code = "-1",
-                        Result = null
-                    };
-                }
-            }
-            catch (Exception ex) {
-                return new ResponseDTO
-                {
-                    IsSuccess = false,
-                    Code = Convert.ToString(-1),
-                    Message = ex.Message,
-                    Result = null
-                };
             }
         }
 

@@ -44,6 +44,7 @@ builder.Services.AddScoped<ITokenProvider, TokenProvider>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ProtectedSessionStorage>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IEmailConfirmedService, EmailConfirmedService>();
 
 builder.Services.AddScoped<IDocumentService, DocumentService>();
 builder.Services.AddScoped<IFileService, FileService>();

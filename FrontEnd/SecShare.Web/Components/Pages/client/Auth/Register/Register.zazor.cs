@@ -40,7 +40,7 @@ public partial class Register
                 return;
             }
 
-            Navigation.NavigateTo("/login");
+            Navigation.NavigateTo($"/verify-otp?email={Uri.EscapeDataString(registerModel.Email)}", forceLoad: true);
         }
         finally
         {
