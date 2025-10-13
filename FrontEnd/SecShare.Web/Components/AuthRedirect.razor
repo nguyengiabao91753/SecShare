@@ -1,0 +1,28 @@
+﻿@inject NavigationManager Navigation
+@rendermode InteractiveServer
+@inject SecShare.Web.Services.IServices.ITokenProvider TokenProvider
+
+@code {
+    private bool _initialized = false;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && !_initialized)
+        {
+            _initialized = true;
+
+            // Kiểm tra nếu đang ở trang /login thì bỏ qua
+            if (Navigation.Uri.EndsWith("/login") || Navigation.Uri.Contains("/login?"))
+            {
+                return; // Không redirect nếu đã ở login
+            }
+
+            var token = await TokenProvider.GetTokenAsync();
+
+            if (string.IsNullOrEmpty(token))
+            {
+                Navigation.NavigateTo("/login", forceLoad: true);
+            }
+        }
+    }
+}

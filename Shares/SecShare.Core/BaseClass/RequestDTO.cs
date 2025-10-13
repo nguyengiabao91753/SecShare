@@ -13,4 +13,6 @@ public class RequestDTO
     public string Url { get; set; }
     public object Data { get; set; }
     public string AccessToken { get; set; }
+
+    public bool IsMultipart { get; set; } = false;
 }

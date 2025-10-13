@@ -35,18 +35,18 @@ public static class AESHelper
         return memoryStream.ToArray();
     }
 
-    public static async Task<byte[]> DecryptFileAsync(IFormFile encryptedFile, byte[] aesKey, byte[] iv)
+    public static async Task<byte[]> DecryptFileAsync(byte[] encryptedFile, byte[] aesKey, byte[] iv)
     {
         using var aes = Aes.Create();
         aes.Key = aesKey;
         aes.IV = iv;
 
-        using var memoryStream = new MemoryStream();
-        using var cryptoStream = new CryptoStream(encryptedFile.OpenReadStream(), aes.CreateDecryptor(), CryptoStreamMode.Read);
+        using var memoryStream = new MemoryStream(encryptedFile);
+        using var cryptoStream = new CryptoStream(memoryStream, aes.CreateDecryptor(), CryptoStreamMode.Read);
+        using var outputStream = new MemoryStream();
+        await cryptoStream.CopyToAsync(outputStream);
 
-        await cryptoStream.CopyToAsync(memoryStream);
-
-        return memoryStream.ToArray();
+        return outputStream.ToArray();
     }
 
     public static byte[] GenerateRandomKey(int size = 32) // 32 bytes = 256-bit

@@ -14,6 +14,9 @@ using System.Text;
 using System.Threading.Tasks;
 using SecShare.Helper.Utils;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
+using System.Reflection.Metadata;
+using System.Security.Cryptography;
 
 namespace SecShare.Servicer.Document;
 public class DocumentAPIService : IDocumentAPIService
@@ -29,9 +32,102 @@ public class DocumentAPIService : IDocumentAPIService
         _userManager = userManager;
     }
 
+    public async Task<ResponseDTO> ListUserFileAsync(string UserId)
+    {
+        try
+        {
+            var documents = await _db.Documents
+                            .Where(d => d.OwnerId == UserId)
+                            .ToListAsync();
+
+            var documentDtos = documents.Select(u => new DocumentDto
+            {
+                Id = u.Id,
+                FileName = u.FileName,
+                FileSize = u.FileSize,
+                FileType = Path.GetExtension(u.FileName)?.TrimStart('.'),
+                UpdatedAt = u.UpdatedAt,
+            }).ToList();
+
+
+            return new ResponseDTO
+            {
+                IsSuccess = true,
+                Result = documentDtos
+            };
+        }
+        catch (Exception ex)
+        {
+            return new ResponseDTO
+            {
+                IsSuccess = false,
+                Code = "-1",
+                Message = ex.Message
+            };
+        }
+    }
+
+    public async Task<Stream> GetFileAsync(Guid DocumentId, string UserId)
+    {
+        // Lấy thông tin user
+        var user = await _userManager.FindByIdAsync(UserId);
+        if (user == null)
+            throw new FileNotFoundException("User not found");
+
+        // Lấy document
+        var document = await _db.Documents.FindAsync(DocumentId);
+        if (document == null)
+            throw new FileNotFoundException("Document not found");
+
+        // Lấy bản ghi share (AESKey đã mã hóa bằng publicKey của người xem)
+        var share = await _db.Shares
+            .FirstOrDefaultAsync(s => s.DocumentId == DocumentId && s.ReceiverId == UserId);
+
+        if (share == null)
+            throw new FileNotFoundException("Document Shared not found");
+
+        try
+        {
+            // Giải mã private key
+            byte[] privateKeyPem = RsaKeyPairHelper.DecryptPrivateKey(user.RsaPrivateKeyEncrypted, user.PasswordHash);
+
+            // Dùng private key giải mã AESKey
+            byte[] aesKey = RsaKeyPairHelper.DecryptAESKey(share.EncryptedAESKey, privateKeyPem);
+
+            // Giải mã file (CipherText + IV)
+            byte[] iv = Convert.FromBase64String(document.IV);
+            byte[] plainBytes = await AESHelper.DecryptFileAsync(document.Ciphertext, aesKey, iv);
+
+            var memoryStream = new MemoryStream(plainBytes);
+            memoryStream.Position = 0;
+
+            return memoryStream;
+        }
+        catch (CryptographicException ex)
+        {
+            throw new UnauthorizedAccessException("Cannot decrypt document (invalid key or IV).", ex);
+        }
+
+
+    }
+
+    private string GetMimeType(string fileName)
+    {
+        var ext = Path.GetExtension(fileName).ToLowerInvariant();
+        return ext switch
+        {
+            ".pdf" => "application/pdf",
+            ".png" => "image/png",
+            ".jpg" or ".jpeg" => "image/jpeg",
+            ".docx" => "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            ".doc" => "application/msword",
+            _ => "application/octet-stream"
+        };
+    }
+
     public async Task<ResponseDTO> ShareFileAsync(ShareFileDto share, string UserId)
     {
-        if(share.ReceiverEmail == null)
+        if (share.ReceiverEmail == null)
         {
             return new ResponseDTO
             {
@@ -40,7 +136,7 @@ public class DocumentAPIService : IDocumentAPIService
                 Message = "Receiver is required"
             };
         }
-        if(share.DocumentId == null)
+        if (share.DocumentId == null)
         {
             return new ResponseDTO
             {
@@ -121,7 +217,7 @@ public class DocumentAPIService : IDocumentAPIService
 
     public async Task<ResponseDTO> UploadMyFileAsync(UploadMyFileDto uploadMyFile)
     {
-        if (uploadMyFile.AttachFile == null || uploadMyFile.AttachFile.File.Length == 0)
+        if (uploadMyFile == null || uploadMyFile.File.Length == 0)
         {
             return new ResponseDTO
             {
@@ -145,16 +241,16 @@ public class DocumentAPIService : IDocumentAPIService
         try
         {
             var (aesKey, iv) = AESHelper.GenerateAESKey();
-            byte[] cipherText = await AESHelper.EncryptFileAsync(uploadMyFile.AttachFile.File, aesKey, iv);
+            byte[] cipherText = await AESHelper.EncryptFileAsync(uploadMyFile.File, aesKey, iv);
 
             var encryptedKey = RsaKeyPairHelper.EncryptAESKey(aesKey, user.PublicKey!);
 
             var document = new Documents
             {
                 OwnerId = uploadMyFile.UserId,
-                FileName = uploadMyFile.AttachFile.FileName,
-                FileSize = uploadMyFile.AttachFile.File.Length,
-                FilePath =" ",
+                FileName = uploadMyFile.FileName + "." + uploadMyFile.Type,
+                FileSize = uploadMyFile.File.Length,
+                FilePath = " ",
                 Ciphertext = cipherText,
                 IV = Convert.ToBase64String(iv),
 

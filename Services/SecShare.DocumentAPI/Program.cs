@@ -5,8 +5,11 @@ using SecShare.Infrastructure.Data;
 using SecShare.SystemConfig.Authentication;
 using SecShare.SystemConfig.Dependencies;
 using SecShare.SystemConfig.Extensions;
+using SecShare.SystemConfig.General;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.AddAppCors();
 
 //Config sql connection
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection").ToString();
@@ -51,6 +54,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseCors("AllowAll");
 
 app.UseHttpsRedirection();
 

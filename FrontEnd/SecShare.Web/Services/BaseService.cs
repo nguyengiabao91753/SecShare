@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Net;
 using System.Text;
 using Newtonsoft.Json;
+using System.Reflection;
 
 namespace SecShare.Web.Services;
 
@@ -33,8 +34,14 @@ public class BaseService : IBaseService
                 message.Headers.Add("Authorization", $"Bearer {token}");
             }
             message.RequestUri = new Uri(requestDto.Url);
-            if (requestDto.Data != null)
+            // Kiểm tra nếu là multipart (dựa trên ApiType hoặc flag mới trong RequestDTO, ví dụ: requestDto.IsMultipart)
+            if (requestDto.IsMultipart && requestDto.Data != null)
             {
+                await SetMultipartContent(message, requestDto.Data);
+            }
+            else if (requestDto.Data != null)
+            {
+                // JSON mặc định
                 message.Content = new StringContent(JsonConvert.SerializeObject(requestDto.Data), Encoding.UTF8, "application/json");
             }
 
@@ -68,6 +75,7 @@ public class BaseService : IBaseService
                 case HttpStatusCode.InternalServerError:
                     return new() { IsSuccess = false, Message = "Internal Server Error" };
                 default:
+
                     var apiContent = await apiResponse.Content.ReadAsStringAsync();
                     var apiResponseDto = JsonConvert.DeserializeObject<ResponseDTO>(apiContent);
                     return apiResponseDto;
@@ -83,6 +91,45 @@ public class BaseService : IBaseService
             return dto;
         }
     }
+
+
+
+
+    private void AddPropertiesToMultipart(MultipartFormDataContent formContent, object data, string? parentName = null)
+    {
+        var properties = data.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
+        foreach (var prop in properties)
+        {
+            var value = prop.GetValue(data);
+            if (value == null) continue;
+
+            string propName = string.IsNullOrEmpty(parentName) ? prop.Name : $"{parentName}.{prop.Name}";
+
+            if (value is IFormFile file)
+            {
+                var fileContent = new StreamContent(file.OpenReadStream());
+                fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
+                formContent.Add(fileContent, propName, file.FileName);
+            }
+            else if (!prop.PropertyType.IsPrimitive && prop.PropertyType != typeof(string))
+            {
+                // object phức tạp → đệ quy
+                AddPropertiesToMultipart(formContent, value, propName);
+            }
+            else
+            {
+                formContent.Add(new StringContent(value.ToString() ?? ""), propName);
+            }
+        }
+    }
+
+    private async Task SetMultipartContent(HttpRequestMessage message, object data)
+    {
+        var formContent = new MultipartFormDataContent();
+        AddPropertiesToMultipart(formContent, data);
+        message.Content = formContent;
+    }
+
 }
 
-   
+

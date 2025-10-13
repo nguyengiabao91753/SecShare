@@ -1,4 +1,5 @@
-﻿using SecShare.Core.BaseClass;
+﻿using Microsoft.AspNetCore.Mvc;
+using SecShare.Core.BaseClass;
 using SecShare.Core.Document;
 using SecShare.Core.Dtos;
 using System;
@@ -13,5 +14,7 @@ public interface IDocumentAPIService
     Task<ResponseDTO> UploadMyFileAsync(UploadMyFileDto uploadMyFile);
     Task<ResponseDTO> ShareFileAsync(ShareFileDto share, string UserId);
 
-    Task<ResponseDTO> ReadFile(string DocumentId, string UserId);
+    Task<Stream> GetFileAsync(Guid DocumentId, string UserId);
+
+    Task<ResponseDTO> ListUserFileAsync(string UserId);
 }

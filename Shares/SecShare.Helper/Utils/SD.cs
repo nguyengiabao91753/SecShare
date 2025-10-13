@@ -10,6 +10,8 @@ public class SD
 
     public static string AuthAPIBase { get; set; }
 
+    public static string DocumentAPIBase { get; set; }
+
     public const string TokenCookie = "JWTToken";
     public enum ApiType
     {

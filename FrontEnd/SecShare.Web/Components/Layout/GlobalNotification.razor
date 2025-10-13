@@ -1,0 +1,42 @@
+﻿@using SecShare.Services
+@inject NotificationService NotificationService
+
+@if (visible)
+{
+    <div class="alert alert-@type alert-dismissible fade show" role="alert">
+        <strong>@title</strong> @message
+        <button type="button" class="close" @onclick="Hide">×</button>
+    </div>
+}
+
+@code {
+    private bool visible;
+    private string message = "";
+    private string type = "success";
+    private string title => type == "success" ? "Success!" : "Error!";
+
+    protected override void OnInitialized()
+    {
+        NotificationService.OnShow += Show;
+        NotificationService.OnHide += Hide;
+    }
+
+    private async Task Show(string msg, string alertType)
+    {
+        message = msg;
+        type = alertType;
+        visible = true;
+        StateHasChanged();
+
+        // Tự ẩn sau 3s
+        await Task.Delay(3000);
+        await Hide();
+    }
+
+    private Task Hide()
+    {
+        visible = false;
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
+}

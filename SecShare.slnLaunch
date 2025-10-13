@@ -7,11 +7,11 @@
         "Action": "Start"
       },
       {
-        "Path": "FrontEnd\\SecShare.Web\\SecShare.Web.csproj",
+        "Path": "Services\\SecShare.DocumentAPI\\SecShare.DocumentAPI.csproj",
         "Action": "Start"
       },
       {
-        "Path": "Services\\SecShare.FileAPI\\SecShare.FileAPI.csproj",
+        "Path": "FrontEnd\\SecShare.Web\\SecShare.Web.csproj",
         "Action": "Start"
       }
     ]

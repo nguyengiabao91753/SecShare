@@ -17,12 +17,19 @@ public class DocumentController : ControllerBase
     {
         _documentAPIService = documentAPIService;
     }
-    //// GET: api/<DocumentController>
-    //[HttpGet]
-    //public IEnumerable<string> Get()
-    //{
-    //    return new string[] { "value1", "value2" };
-    //}
+    // GET: api/<DocumentController>
+    [Authorize]
+    [HttpGet("getListDoc")]
+    public async Task<IActionResult> GetListDoc()
+    {
+        var UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var rs = await _documentAPIService.ListUserFileAsync(UserId!);
+        if(rs.IsSuccess)
+        {
+            return Ok(rs);
+        }
+        return BadRequest(rs);
+    }
 
     //// GET api/<DocumentController>/5
     //[HttpGet("{id}")]
@@ -34,6 +41,8 @@ public class DocumentController : ControllerBase
     //POST api/<DocumentController>
     [Authorize]
     [HttpPost("uploadMyFile")]
+    [DisableRequestSizeLimit]
+    [Consumes("multipart/form-data")]
     public async Task<IActionResult> UploadMyFile([FromForm] UploadMyFileDto uploadMyFileDto)
     {
         var UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -49,7 +58,8 @@ public class DocumentController : ControllerBase
 
 
     [Authorize]
-    [HttpPost("ShareMyFile")]
+    [HttpPost("shareMyFile")]
+
     public async Task<IActionResult> ShareMyFile([FromBody] ShareFileDto shareFileDto)
     {
         var UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);

@@ -1,0 +1,70 @@
+﻿@page "/fileview/{**url}"  
+@rendermode InteractiveServer
+@using SecShare.Helper.Utils
+@using SecShare.Web.Services.IServices
+@inject HttpClient _http
+@inject ITokenProvider _tokenProvider
+@layout SecShare.Web.Components.Layout.EmptyLayout
+
+<h3>Secure File Viewer</h3>
+
+@if (IsLoading)
+{
+    <p>Loading file...</p>
+}
+else if (!string.IsNullOrEmpty(Error))
+{
+    <div class="alert alert-danger">@Error</div>
+}
+else if (!string.IsNullOrEmpty(BlobUrl))
+{
+    <iframe src="@BlobUrl" style="width:100%; height:90vh; border:none;"></iframe>
+}
+
+@code {
+    [Parameter] public string? url { get; set; }
+    private string? BlobUrl;
+    private bool IsLoading = true;
+    private string? Error;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(url))
+            {
+                Error = "Invalid file URL.";
+                return;
+            }
+
+            // Gắn token vào header
+            var token = await _tokenProvider.GetTokenAsync();
+            _http.DefaultRequestHeaders.Authorization =
+                new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            // Xây dựng URL đến API thực
+            var fullUrl = $"{SD.DocumentAPIBase}/api/{url}";
+
+            // Gọi API để lấy stream file đã giải mã
+            var response = await _http.GetAsync(fullUrl);
+            if (!response.IsSuccessStatusCode)
+            {
+                Error = $"Failed to fetch file. {response.ReasonPhrase}";
+                return;
+            }
+
+            var contentType = response.Content.Headers.ContentType?.ToString() ?? "application/octet-stream";
+            var bytes = await response.Content.ReadAsByteArrayAsync();
+            var base64 = Convert.ToBase64String(bytes);
+            BlobUrl = $"data:{contentType};base64,{base64}";
+        }
+        catch (Exception ex)
+        {
+            Error = ex.Message;
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+}
