@@ -1,8 +1,11 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using SecShare.Base.Auth;
 using SecShare.Core.Auth;
+using SecShare.Helper.EmailHelper;
 using SecShare.Infrastructure.Data;
+using SecShare.Servicer.Auth;
 using SecShare.SystemConfig.Dependencies;
 using SecShare.SystemConfig.Extensions;
 using System;
@@ -37,10 +40,14 @@ builder.AddServiceTransient();
 //Config Verify Token
 builder.AddAppAuthentication();
 
+builder.Services.Configure<EmailSetting>(
+    builder.Configuration.GetSection("EmailSetting"));
+
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddMemoryCache();
 builder.Services.AddSwaggerGen(
      c =>
 {

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SecShare.Base.Auth;
+using SecShare.Helper.EmailHelper;
 using SecShare.Servicer.Auth;
 
 
@@ -26,6 +27,10 @@ public static partial class DependencyInjection
         builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 
         builder.Services.AddScoped<IUserAPIService, UserAPIService>();
+
+        builder.Services.AddScoped<IotpService, OtpAPIService>();
+        builder.Services.AddScoped<IEmailHelper, EmailHelper>();
+        builder.Services.AddScoped<IEmailAPIService, EmailAPIService>();
     }
 
     public static void AddServiceTransient(this IHostApplicationBuilder builder)

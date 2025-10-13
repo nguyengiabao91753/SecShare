@@ -38,6 +38,7 @@ builder.Services.AddScoped<ITokenProvider, TokenProvider>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ProtectedSessionStorage>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IEmailConfirmedService, EmailConfirmedService>();
 
 //----------------------------------------------------------
 //Add API URL 

@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Azure;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using SecShare.Base.Auth;
 using SecShare.Core.Dtos;
 using SecShare.Servicer.Auth;
@@ -13,11 +15,17 @@ public class AuthController : ControllerBase
 {
     private readonly IAuthAPIService _authService;
     private readonly IUserAPIService _userService;
+    private readonly IMemoryCache _memoryCache;
+    private readonly IotpService _otpService;
+    private readonly IEmailAPIService _emailAPIService;
 
-    public AuthController(IAuthAPIService authService, IUserAPIService userService)
+    public AuthController(IAuthAPIService authService, IUserAPIService userService, IMemoryCache memoryCache, IotpService otpService, IEmailAPIService emailAPIService)
     {
         _authService = authService;
         _userService = userService;
+        _memoryCache = memoryCache;
+        _otpService = otpService;
+        _emailAPIService = emailAPIService;
     }
 
     [HttpPost("register")]
@@ -75,6 +83,41 @@ public class AuthController : ControllerBase
     {
         var UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         var response = await _userService.updateInformation(userDto, UserId);
+        if (!response.IsSuccess)
+        {
+            return BadRequest(response);
+        }
+        return Ok(response);
+    }
+
+    [Authorize]
+    [HttpPost("sendOTP")]
+    public async Task<IActionResult> SendOTPAsync([FromBody] OtpDto otpDto)
+    {
+        var response = await _otpService.sendOtpAsync(otpDto);
+        if (!response.IsSuccess)
+        {
+            return BadRequest(response);
+        }
+        return Ok(response);
+    }
+    [Authorize]
+    [HttpPost("verifyOTP")]
+    public async Task<IActionResult> VerifyOTPAsync([FromBody] OtpDto otpDto)
+    {
+        var userid = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var response = await _otpService.verifyOtpAsync(otpDto);
+        if (!response.IsSuccess)
+        {
+            return BadRequest(response);
+        }
+        return Ok(response);
+    }
+
+    [HttpGet("checkEmailConfirmed")]
+    public async Task<IActionResult> CheckEmailConfirmedAsync (string userName)
+    {
+        var response = await _emailAPIService.checkEmailConfirmed(userName);
         if (!response.IsSuccess)
         {
             return BadRequest(response);
