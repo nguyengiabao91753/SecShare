@@ -5,7 +5,7 @@ namespace SecShare.Web.Services.IServices.IUserServices
 {
     public interface IEmailConfirmedService
     {
-        Task<ResponseDTO> CheckEmailConfirmed();
+        Task<ResponseDTO> CheckEmailConfirmed(string username);
 
         Task<ResponseDTO> SendOTP(OtpDto otp);
 

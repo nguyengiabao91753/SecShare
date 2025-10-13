@@ -12,7 +12,7 @@
             _initialized = true;
 
             // Kiểm tra nếu đang ở trang /login thì bỏ qua
-            if (Navigation.Uri.Contains("/login") || Navigation.Uri.Contains("/register?"))
+            if (Navigation.Uri.Contains("/login") || Navigation.Uri.Contains("/register") || Navigation.Uri.Contains("/verify-otp"))
             {
                 return; // Không redirect nếu đã ở login
             }

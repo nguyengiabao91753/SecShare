@@ -13,15 +13,16 @@ namespace SecShare.Web.Services
         {
             _baseService = baseService;
         }
-        public async Task<ResponseDTO> CheckEmailConfirmed()
+        public async Task<ResponseDTO> CheckEmailConfirmed(string userName)
         {
             return await _baseService.SendAsync(new RequestDTO()
             {
-                ApiType = SD.ApiType.GET,
-                Data = null,
+                ApiType = SD.ApiType.POST,
+                Data = userName,
                 Url = $"{SD.AuthAPIBase}/api/auth/checkEmailConfirmed"
             }, withBearer: true);
         }
+
 
         public async Task<ResponseDTO> SendOTP(OtpDto otp)
         {
