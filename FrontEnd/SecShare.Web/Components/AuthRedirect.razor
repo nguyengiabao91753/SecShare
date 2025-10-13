@@ -12,7 +12,7 @@
             _initialized = true;
 
             // Kiểm tra nếu đang ở trang /login thì bỏ qua
-            if (Navigation.Uri.EndsWith("/login") || Navigation.Uri.Contains("/login?"))
+            if (Navigation.Uri.Contains("/login") || Navigation.Uri.Contains("/register?"))
             {
                 return; // Không redirect nếu đã ở login
             }
