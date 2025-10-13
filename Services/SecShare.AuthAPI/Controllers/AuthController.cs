@@ -90,7 +90,6 @@ public class AuthController : ControllerBase
         return Ok(response);
     }
 
-    [Authorize]
     [HttpPost("sendOTP")]
     public async Task<IActionResult> SendOTPAsync([FromBody] OtpDto otpDto)
     {
@@ -101,7 +100,7 @@ public class AuthController : ControllerBase
         }
         return Ok(response);
     }
-    [Authorize]
+
     [HttpPost("verifyOTP")]
     public async Task<IActionResult> VerifyOTPAsync([FromBody] OtpDto otpDto)
     {
@@ -114,8 +113,8 @@ public class AuthController : ControllerBase
         return Ok(response);
     }
 
-    [HttpGet("checkEmailConfirmed")]
-    public async Task<IActionResult> CheckEmailConfirmedAsync (string userName)
+    [HttpPost("checkEmailConfirmed")]
+    public async Task<IActionResult> CheckEmailConfirmedAsync ([FromBody]string userName)
     {
         var response = await _emailAPIService.checkEmailConfirmed(userName);
         if (!response.IsSuccess)

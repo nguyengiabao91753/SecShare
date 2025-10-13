@@ -30,20 +30,18 @@ public static partial class DependencyInjection
 
         builder.Services.AddScoped<IUserAPIService, UserAPIService>();
         builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
-    }
-    public static void AddServiceScoped(this IHostApplicationBuilder builder)
-    {
-       
-        builder.Services.AddScoped<IClouDinaryService, ClouDinaryService>();
-        builder.Services.AddScoped<IDocumentAPIService, DocumentAPIService>();
-        builder.Services.AddScoped<IAuthAPIService, AuthAPIService>();
-        builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 
         builder.Services.AddScoped<IUserAPIService, UserAPIService>();
 
         builder.Services.AddScoped<IotpService, OtpAPIService>();
         builder.Services.AddScoped<IEmailHelper, EmailHelper>();
         builder.Services.AddScoped<IEmailAPIService, EmailAPIService>();
+    }
+    public static void AddServiceScoped(this IHostApplicationBuilder builder)
+    {
+       
+        builder.Services.AddScoped<IClouDinaryService, ClouDinaryService>();
+        builder.Services.AddScoped<IDocumentAPIService, DocumentAPIService>();
     }
 
     public static void AddServiceTransient(this IHostApplicationBuilder builder)

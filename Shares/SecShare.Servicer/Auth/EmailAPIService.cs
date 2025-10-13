@@ -50,7 +50,7 @@ namespace SecShare.Servicer.Auth
                         IsSuccess = false,
                         Code = Convert.ToString(-1),
                         Message = "Email has not been verified yet.",
-                        Result = 0
+                        Result = user.Email
                     };
                 }
 
@@ -58,7 +58,7 @@ namespace SecShare.Servicer.Auth
                     IsSuccess = true,
                     Code = Convert.ToString(0),
                     Message = "",
-                    Result = 1
+                    Result = user.Email
                 };
             }
             catch (Exception ex) {

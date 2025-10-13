@@ -32,8 +32,8 @@ public partial class Login
 
     private async Task HandleLogin()
     {
-        var checkResponse = await _emailConfirmedService.CheckEmailConfirmed();
-        if (checkResponse != null && checkResponse.IsSuccess && Convert.ToInt32(checkResponse.Result) == 1)
+        var checkResponse = await _emailConfirmedService.CheckEmailConfirmed(model.Username);
+        if (checkResponse != null && checkResponse.IsSuccess)
         {
             isSubmitting = true;
             try
@@ -58,13 +58,14 @@ public partial class Login
         }
         else
         {
-        infoMessage = "Please verify your email before continuing...";
-        StateHasChanged(); // Cập nhật UI
+            var email = checkResponse.Result.ToString();
+            infoMessage = "Please verify your email before continuing...";
+            StateHasChanged(); // Cập nhật UI
 
-        await Task.Delay(3000); // Chờ 3 giây cho người dùng đọc
-        Navigation.NavigateTo("/verify-otp");
+        
+            Navigation.NavigateTo($"/verify-otp?email={Uri.EscapeDataString(email)}", forceLoad: true);
         }
-        }
+    }
 
 
        
