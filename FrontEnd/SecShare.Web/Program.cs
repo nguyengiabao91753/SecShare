@@ -15,7 +15,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 
-
+// Cấu hình Map Assembly
+builder.Services.AddRazorComponents()
+    .AddInteractiveServerComponents();
 
 
 

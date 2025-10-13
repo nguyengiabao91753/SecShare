@@ -17,7 +17,7 @@ public class SecShareDbContext : DbContext
     {
     }
 
-    public DbSet<Document> Documents { get; set; }
+    public DbSet<Documents> Documents { get; set; }
     public DbSet<Share> Shares { get; set; }
     public DbSet<PendingShare> PendingShares { get; set; }
     public DbSet<Group> Groups { get; set; }
@@ -34,7 +34,7 @@ public class SecShareDbContext : DbContext
         base.OnModelCreating(modelBuilder);
 
         // Mapping table names to match SQL
-        modelBuilder.Entity<Document>().ToTable("Documents");
+        modelBuilder.Entity<Documents>().ToTable("Documents");
         modelBuilder.Entity<Share>().ToTable("Shares");
         modelBuilder.Entity<PendingShare>().ToTable("PendingShares");
         modelBuilder.Entity<Group>().ToTable("Groups");

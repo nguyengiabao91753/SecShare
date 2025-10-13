@@ -39,6 +39,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Gateways", "Gateways", "{9C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gateway.Ocelot", "Gateways\Gateway.Ocelot\Gateway.Ocelot.csproj", "{4DB7DC54-70EC-487B-8142-9909EB978F39}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shares.Validation", "Shares\Shares.Validation\Shares.Validation.csproj", "{6C81BC7D-770A-470A-91A1-1E8B53A6E998}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -101,6 +103,10 @@ Global
 		{4DB7DC54-70EC-487B-8142-9909EB978F39}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4DB7DC54-70EC-487B-8142-9909EB978F39}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4DB7DC54-70EC-487B-8142-9909EB978F39}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C81BC7D-770A-470A-91A1-1E8B53A6E998}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C81BC7D-770A-470A-91A1-1E8B53A6E998}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C81BC7D-770A-470A-91A1-1E8B53A6E998}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C81BC7D-770A-470A-91A1-1E8B53A6E998}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -120,6 +126,7 @@ Global
 		{E2E63CFB-A2B0-6EAE-0BC0-C98FBBAAF019} = {33F65A74-8BF1-4511-B386-536AA24C98BA}
 		{226D7257-97F7-449C-973D-9242FCB8FC37} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{4DB7DC54-70EC-487B-8142-9909EB978F39} = {9CCDA91B-A4E7-447E-A7ED-BA88440D25C5}
+		{6C81BC7D-770A-470A-91A1-1E8B53A6E998} = {33F65A74-8BF1-4511-B386-536AA24C98BA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {691166A7-17FC-47EC-A5D8-05F6E6D8C29E}

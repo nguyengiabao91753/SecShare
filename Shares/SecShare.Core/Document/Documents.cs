@@ -6,12 +6,13 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SecShare.Core.Document;
-public class Document : BaseClass.BaseClass
+public class Documents : BaseClass.BaseClass
 {
     public string OwnerId { get; set; }
     public string FileName { get; set; }
     public string FilePath { get; set; }
     public long FileSize { get; set; }
     public byte[] Ciphertext { get; set; }
+    public string IV { get; set; }
     public bool IsDeleted { get; set; }
 }

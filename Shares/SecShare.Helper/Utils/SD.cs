@@ -19,4 +19,12 @@ public class SD
         DELETE
 
     }
+
+    public enum FileAccess
+    {
+        Read,
+        Dowload,
+        All
+
+    }
 }
