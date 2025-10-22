@@ -12,6 +12,7 @@ public class DocumentDto
     public string FilePath { get; set; }
     public long FileSize { get; set; }
 
+    public string? OwnerEmail { get; set; }
     public string FileType { get; set; }
 
     public DateTime UpdatedAt { get; set; }

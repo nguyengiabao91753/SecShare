@@ -39,6 +39,20 @@ public class DocumentController : ControllerBase
     }
 
     [Authorize]
+    [HttpGet("getListReceivedDoc")]
+    public async Task<IActionResult> GetListReceivedDoc()
+    {
+        var UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var rs = await _documentAPIService.ListReceiveFileAsync(UserId!);
+        if (rs.IsSuccess)
+        {
+
+            return Ok(rs);
+        }
+        return BadRequest(rs);
+    }
+
+    [Authorize]
     [HttpGet("getListUsersShare/{docId}")]
     public async Task<IActionResult> GetListUsersShared( string docId)
     {

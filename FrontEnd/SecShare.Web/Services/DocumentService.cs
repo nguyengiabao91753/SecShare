@@ -24,6 +24,16 @@ public class DocumentService : IDocumentService
         }, withBearer: true);
     }
 
+    public async Task<ResponseDTO?> GetListDocShared()
+    {
+        return await _baseService.SendAsync(new RequestDTO()
+        {
+            ApiType = SD.ApiType.GET,
+            Url = SD.DocumentAPIBase + "/api/document/getListDoc"
+
+        }, withBearer: true);
+    }
+
     public async Task<ResponseDTO?> ListFiles()
     {
         return await _baseService.SendAsync(new RequestDTO()

@@ -62,7 +62,7 @@ namespace SecShare.Servicer.Auth
                     {
                         IsSuccess = true,
                         Code = Convert.ToString(0),
-                        Message = $"OTP was sent to user email. OTP:{otp}",
+                        Message = $"OTP was sent to user email.",
                         Result = otp
                     };
                 }

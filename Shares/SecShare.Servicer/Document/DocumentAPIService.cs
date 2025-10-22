@@ -302,4 +302,41 @@ public class DocumentAPIService : IDocumentAPIService
         rs.IsSuccess = true;
         return rs;
     }
+
+    public async Task<ResponseDTO> ListReceiveFileAsync(string UserId)
+    {
+        var rs = new ResponseDTO();
+        try
+        {
+            var listDocuments = await _db.Shares
+                                .Where(s => s.ReceiverId == UserId)
+                                .ToListAsync();
+            var documentDtos = new List<DocumentDto>();
+            foreach (var share in listDocuments)
+            {
+                var document = await _db.Documents.FindAsync(share.DocumentId);
+                if (document != null)
+                {
+                    documentDtos.Add(new DocumentDto
+                    {
+                        Id = document.Id,
+                        FileName = document.FileName,
+                        FileSize = document.FileSize,
+                        FileType = Path.GetExtension(document.FileName)?.TrimStart('.'),
+                        UpdatedAt = document.UpdatedAt,
+                    });
+                }
+            }
+            rs.Result = documentDtos;
+            rs.IsSuccess = true;
+
+        }
+        catch (Exception ex)
+        {
+            rs.IsSuccess = false;
+            rs.Code = "-1";
+            rs.Message = ex.Message;
+        }
+        return rs;
+    }
 }
