@@ -78,7 +78,7 @@ namespace SecShare.Web.Components.Pages.client.MyAccount
 
                 // Chờ 3 giây rồi redirect
                 await Task.Delay(3000);
-                Navigation.NavigateTo("/");
+                Navigation.NavigateTo("/myspace", forceLoad: true);
             }
             finally
             {

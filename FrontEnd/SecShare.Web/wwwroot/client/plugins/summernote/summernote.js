@@ -10047,7 +10047,7 @@ var dropdown = renderer.create('<ul class="note-dropdown-menu dropdown-menu"></u
     var option = summernote_bs3_typeof(item) === 'object' ? item.option : undefined;
     var dataValue = 'data-value="' + value + '"';
     var dataOption = option !== undefined ? ' data-option="' + option + '"' : '';
-    return '<li aria-label="' + value + '"><a href="#" ' + (dataValue + dataOption) + '>' + content + '</a></li>';
+    return '<li aria-label="' + value + '"><a  ' + (dataValue + dataOption) + '>' + content + '</a></li>';
   }).join('') : options.items;
   $node.html(markup).attr({
     'aria-label': options.title
@@ -10066,7 +10066,7 @@ var dropdownCheck = renderer.create('<ul class="note-dropdown-menu dropdown-menu
   var markup = Array.isArray(options.items) ? options.items.map(function (item) {
     var value = typeof item === 'string' ? item : item.value || '';
     var content = options.template ? options.template(item) : item;
-    return '<li aria-label="' + item + '"><a href="#" data-value="' + value + '">' + icon(options.checkClassName) + ' ' + content + '</a></li>';
+    return '<li aria-label="' + item + '"><a  data-value="' + value + '">' + icon(options.checkClassName) + ' ' + content + '</a></li>';
   }).join('') : options.items;
   $node.html(markup).attr({
     'aria-label': options.title

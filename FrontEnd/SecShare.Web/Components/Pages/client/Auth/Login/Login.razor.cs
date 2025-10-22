@@ -48,7 +48,7 @@ public partial class Login
                 LoginResponseDto loginResponse = JsonConvert.DeserializeObject<LoginResponseDto>(Convert.ToString(rs.Result));
                 _tokenProvider.SetTokenAsync(loginResponse.Token);
 
-                Navigation.NavigateTo("/"); // Email đã xác nhận
+                Navigation.NavigateTo("/myspace"); // Email đã xác nhận
                 }
             }
             finally
@@ -58,12 +58,19 @@ public partial class Login
         }
         else
         {
-            var email = checkResponse.Result.ToString();
-            infoMessage = "Please verify your email before continuing...";
-            StateHasChanged(); // Cập nhật UI
+            var email = checkResponse.Result?.ToString();
+            if (!String.IsNullOrEmpty(email))
+            {
+                infoMessage = "Please verify your email before continuing...";
+                StateHasChanged(); // Cập nhật UI
 
-        
-            Navigation.NavigateTo($"/verify-otp?email={Uri.EscapeDataString(email)}", forceLoad: true);
+
+                Navigation.NavigateTo($"/verify-otp?email={Uri.EscapeDataString(email)}", forceLoad: true);
+            }
+            else
+            {
+                errorMessage = $"Login failed. Account not found.";
+            }
         }
     }
 

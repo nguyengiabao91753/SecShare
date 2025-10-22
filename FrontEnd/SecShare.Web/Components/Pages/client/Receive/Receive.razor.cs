@@ -35,7 +35,7 @@ public partial class Receive
 
             var rs = await _documentService.GetListDocShared();
            
-            listFiles = JsonConvert.DeserializeObject<List<DocumentDto>>(Convert.ToString(rs.Result)!)!;
+            listFiles = JsonConvert.DeserializeObject<List<DocumentDto>>(Convert.ToString(rs.Result)!)! ?? new List<DocumentDto>();
             
         
 

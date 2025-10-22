@@ -10047,7 +10047,7 @@ var dropdown = renderer.create('<div class="note-dropdown-menu dropdown-menu" ro
     var option = summernote_bs4_typeof(item) === 'object' ? item.option : undefined;
     var dataValue = 'data-value="' + value + '"';
     var dataOption = option !== undefined ? ' data-option="' + option + '"' : '';
-    return '<a class="dropdown-item" href="#" ' + (dataValue + dataOption) + ' role="listitem" aria-label="' + value + '">' + content + '</a>';
+    return '<a class="dropdown-item"  ' + (dataValue + dataOption) + ' role="listitem" aria-label="' + value + '">' + content + '</a>';
   }).join('') : options.items;
   $node.html(markup).attr({
     'aria-label': options.title
@@ -10066,7 +10066,7 @@ var dropdownCheck = renderer.create('<div class="note-dropdown-menu dropdown-men
   var markup = Array.isArray(options.items) ? options.items.map(function (item) {
     var value = typeof item === 'string' ? item : item.value || '';
     var content = options.template ? options.template(item) : item;
-    return '<a class="dropdown-item" href="#" data-value="' + value + '" role="listitem" aria-label="' + item + '">' + icon(options.checkClassName) + ' ' + content + '</a>';
+    return '<a class="dropdown-item"  data-value="' + value + '" role="listitem" aria-label="' + item + '">' + icon(options.checkClassName) + ' ' + content + '</a>';
   }).join('') : options.items;
   $node.html(markup).attr({
     'aria-label': options.title

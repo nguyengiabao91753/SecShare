@@ -1,13 +1,16 @@
 ﻿@page "/receive"
 @rendermode InteractiveServer
 
+@inject NavigationManager Navigation
+
+
 <!-- Content Header (Page header) -->
 <div class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
                 <div class="row file-header">
-                    <button type="button" class="btn btn-lg btn-lg-square btn-outline-secondary m-2" onclick="window.location.href='../index.html'">
+                    <button type="button" class="btn btn-lg btn-lg-square btn-outline-secondary m-2" @onclick="@(() => Navigation.NavigateTo("/myspace"))">
                         <i class="fa fa-arrow-left"></i>
                     </button>
 
@@ -78,11 +81,11 @@
                                         <i class="fas fa-ellipsis-h"></i>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-right">
-                                        <a class="dropdown-item" href="#">Details</a>
-                                        <a class="dropdown-item" href="#">Share</a>
-                                        <a class="dropdown-item" href="#">Rename</a>
+                                        <a class="dropdown-item" >Details</a>
+                                        <a class="dropdown-item" >Share</a>
+                                        <a class="dropdown-item" >Rename</a>
                                         <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item text-danger" href="#">Delete</a>
+                                        <a class="dropdown-item text-danger" >Delete</a>
                                     </div>
                                 </div>
                             </div>
@@ -93,10 +96,11 @@
 
             }
         </div>
-        </div>
+    </div>
 
-        <!-- Sidebar -->
-        <!-- Sidebar chi tiết file -->
+    <!--Sidebar-->
+    @if (listFiles != null && listFiles.Any())
+    {
         <div id="fileDetailSidebar" class="file-sidebar">
             <div class="sidebar-header">
                 <button class="close">&times;</button>
@@ -109,186 +113,24 @@
                 <p><b>Ngày chia sẻ:</b> <span id="fileModified"></span></p>
             </div>
         </div>
+    }
 
-        <!--Script xử lý toàn bộ file cards-->
-        <script>
-              document.addEventListener('DOMContentLoaded', function () {
-                // --- REQUIRE: jQuery + Popper + Bootstrap JS để dropdown & tooltip hoạt động ---
-                // init tooltip nếu có jQuery + bootstrap tooltip
-                if (typeof $ !== 'undefined' && typeof $.fn.tooltip === 'function') {
-                  $('[data-toggle="tooltip"]').tooltip();
-                }
 
-                const cards = Array.from(document.querySelectorAll('.card-file'));
-                const sidebar = document.getElementById('fileDetailSidebar');
+    <!-- Pagination -->
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            <li class="page-item disabled">
+                <a class="page-link" tabindex="-1">Previous</a>
+            </li>
+            <li class="page-item active"><a class="page-link" >1</a></li>
+            <li class="page-item"><a class="page-link" >2</a></li>
+            <li class="page-item"><a class="page-link" >3</a></li>
+            <li class="page-item">
+                <a class="page-link" >Next</a>
+            </li>
+        </ul>
+    </nav>
 
-                // file icon mapping
-                const fileIcons = {
-                  docx: "https://img.icons8.com/color/96/000000/ms-word.png",
-                  pptx: "https://img.icons8.com/color/96/000000/ms-powerpoint.png",
-                  xlsx: "https://img.icons8.com/color/96/000000/ms-excel.png",
-                  pdf: "https://img.icons8.com/color/96/000000/pdf.png",
-                  jpg: "https://img.icons8.com/color/96/000000/image.png",
-                  png: "https://img.icons8.com/color/96/000000/image.png",
-                  default: "https://img.icons8.com/fluency/96/000000/file.png"
-                };
-
-                // set thumbnails safely
-                cards.forEach(card => {
-                  const type = (card.dataset.type || '').toLowerCase();
-                  const img = card.querySelector('.cover');
-                  if (img) img.src = fileIcons[type] || fileIcons.default;
-                  // hide other-actions initially
-                  const other = card.querySelector('.other-actions');
-                  if (other) other.style.display = 'none';
-                });
-
-                // helper: reset selection (cards + table rows)
-                function resetSelection() {
-                  document.querySelectorAll('.card-file.active').forEach(c => {
-                    c.classList.remove('active');
-                    const o = c.querySelector('.other-actions');
-                    if (o) o.style.display = 'none';
-                  });
-                  document.querySelectorAll('table tbody tr.table-active').forEach(r => {
-                    r.classList.remove('table-active');
-                    const o = r.querySelector('.action-cell .other-actions');
-                    if (o) o.classList.add('d-none');
-                  });
-                }
-
-                // show sidebar with data object {name, owner, email, date}
-                function showSidebar(data) {
-                  if (!sidebar) return;
-                  document.getElementById('fileName') && (document.getElementById('fileName').textContent = data.name || '');
-                  document.getElementById('fileOwner') && (document.getElementById('fileOwner').textContent = data.owner || '');
-                  document.getElementById('fileEmail') && (document.getElementById('fileEmail').textContent = data.email || '');
-                  document.getElementById('fileModified') && (document.getElementById('fileModified').textContent = data.date || '');
-                  sidebar.classList.add('show');
-                }
-
-                // Delegation: bắt tất cả click vào .btn-preview (card hoặc table)
-                document.addEventListener('click', function (evt) {
-                  const previewBtn = evt.target.closest('.btn-preview');
-                  if (!previewBtn) return;
-
-                  evt.stopPropagation(); // không để row/card xử lý sau đó
-                  // reset previous
-                  resetSelection();
-
-                  const card = previewBtn.closest('.card-file');
-                  const row = previewBtn.closest('tr');
-
-                  if (card) {
-                    card.classList.add('active');
-                    const other = card.querySelector('.other-actions');
-                    if (other) other.style.display = 'flex';
-
-                    showSidebar({
-                      name: card.dataset.filename || card.dataset.fileName || (card.querySelector('.file-title') && card.querySelector('.file-title').innerText) || '',
-                      owner: card.dataset.sharedby || card.dataset.sharedBy || '',
-                      email: card.dataset.email || '',
-                      date: card.dataset.dateshared || card.dataset.dateShared || ''
-                    });
-                    return;
-                  }
-
-                  if (row) {
-                    row.classList.add('table-active');
-                    const other = row.querySelector('.action-cell .other-actions');
-                    if (other) other.classList.remove('d-none');
-
-                    // lấy email từ avatar nếu có data-email hoặc title
-                    const avatar = row.querySelector('[data-email], [data-toggle="tooltip"]');
-                    const email = avatar ? (avatar.getAttribute('data-email') || avatar.getAttribute('title') || '') : '';
-                    showSidebar({
-                      name: row.children[0] ? row.children[0].innerText.trim() : '',
-                      owner: row.children[1] ? row.children[1].innerText.trim() : '',
-                      email: email,
-                      date: row.children[2] ? row.children[2].innerText.trim() : ''
-                    });
-                    return;
-                  }
-                });
-
-                // Click trên card để chọn (trừ khi bấm button/anchor/dropdown toggle)
-                cards.forEach(card => {
-                  card.addEventListener('click', function (e) {
-                    // nếu click vào button/a/dropdown -> ignore selection here
-                    if (e.target.closest('button') || e.target.closest('a') || e.target.closest('[data-toggle="dropdown"], .dropdown-toggle')) return;
-                    resetSelection();
-                    this.classList.add('active');
-                    const other = this.querySelector('.other-actions');
-                    if (other) other.style.display = 'flex';
-                  });
-                });
-
-                // Nếu bạn vẫn có table rows, attach select handler (giữ nguyên logic giống table)
-                document.querySelectorAll('table tbody tr').forEach(row => {
-                  row.addEventListener('click', function (e) {
-                    // ignore clicks on buttons & dropdown toggle/menu so dropdown vẫn hoạt động
-                    if (e.target.closest('button') || e.target.closest('a') || e.target.closest('[data-toggle="dropdown"], .dropdown-toggle') || e.target.closest('.dropdown-menu')) return;
-                    resetSelection();
-                    row.classList.add('table-active');
-                    const other = row.querySelector('.action-cell .other-actions');
-                    if (other) other.classList.remove('d-none');
-                  });
-                });
-
-                // khi bấm vào dropdown toggle -> KHÔNG reset selection, cho Bootstrap xử lý hiển thị menu
-                // (không cần thêm code đặc biệt, chỉ cần tránh resetSelection trong global click handler)
-
-                // Close sidebar button
-                if (sidebar) {
-                  const closeBtn = sidebar.querySelector('.close');
-                  if (closeBtn) closeBtn.addEventListener('click', function (e) { e.stopPropagation(); sidebar.classList.remove('show'); });
-                }
-
-                // Click ra ngoài (ngoại trừ card/table/sidebar/dropdown-menu) => reset selection (không đóng sidebar)
-                document.addEventListener('click', function (evt) {
-                  const clickedInCard = !!evt.target.closest('.card-file');
-                  const clickedInTable = !!evt.target.closest('table');
-                  const clickedInSidebar = !!evt.target.closest('#fileDetailSidebar');
-                  const clickedInDropdown = !!evt.target.closest('.dropdown-menu') || !!evt.target.closest('[data-toggle="dropdown"], .dropdown-toggle');
-
-                  if (!clickedInCard && !clickedInTable && !clickedInSidebar && !clickedInDropdown) {
-                    resetSelection();
-                  }
-                });
-
-                // Safety log
-                if (!sidebar) console.warn('Sidebar element (#fileDetailSidebar) not found.');
-              });
-
-              //Double click sẽ mở trang xem tài liệu
-              document.querySelectorAll('.card-file').forEach(card => {
-              card.addEventListener('dblclick', function (e) {
-                // Nếu double click vào nút hoặc trong vùng nút thì bỏ qua
-                if (e.target.closest('button') || e.target.closest('.dropdown-menu')) {
-                  return;
-                }
-
-                const fileUrl = card.dataset.url;
-                if (fileUrl) {
-                  window.open(fileUrl, '_blank');
-                }
-              });
-            });
-        </script>
-
-        <!-- Pagination -->
-        <nav aria-label="Page navigation">
-            <ul class="pagination justify-content-center">
-                <li class="page-item disabled">
-                    <a class="page-link" href="#" tabindex="-1">Previous</a>
-                </li>
-                <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item">
-                    <a class="page-link" href="#">Next</a>
-                </li>
-            </ul>
-        </nav>
+    <script src="~/client/dist/js/pages/recieve.js"></script>
     </div>
     <!-- /.content -->
