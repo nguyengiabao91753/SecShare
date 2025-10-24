@@ -141,6 +141,7 @@ public partial class MySpace
             return;
         }
         await _notificationService.ShowSuccess("Upload successful!");
+        listFiles.Add(JsonConvert.DeserializeObject<DocumentDto>(Convert.ToString(rs.Result)));
         ResetForm();
         isModalOpen = false; // Đóng modal sau khi upload thành công
     }

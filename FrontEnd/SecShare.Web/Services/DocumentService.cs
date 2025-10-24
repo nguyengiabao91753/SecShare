@@ -29,7 +29,7 @@ public class DocumentService : IDocumentService
         return await _baseService.SendAsync(new RequestDTO()
         {
             ApiType = SD.ApiType.GET,
-            Url = SD.DocumentAPIBase + "/api/document/getListDoc"
+            Url = SD.DocumentAPIBase + "/api/document/getListReceivedDoc"
 
         }, withBearer: true);
     }

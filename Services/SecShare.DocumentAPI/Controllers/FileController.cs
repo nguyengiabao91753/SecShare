@@ -81,7 +81,7 @@ public class FileController : ControllerBase
             var stream = await _documentAPIService.GetFileAsync(docId, userId);
             var document = await _db.Documents.FindAsync(docId);
             var contentType = FileHelper.GetMimeType(document!.FileName);
-            Response.Headers.Add("Content-Disposition", $"inline; filename={document.FileName}");
+            //Response.Headers.Add("Content-Disposition", $"inline; filename={document.FileName}");
             return File(stream, contentType);
         }
         catch (UnauthorizedAccessException)
