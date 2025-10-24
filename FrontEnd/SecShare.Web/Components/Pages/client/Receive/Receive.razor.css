@@ -1,0 +1,105 @@
+﻿.card-file {
+    position: relative;
+    border: 1px solid #ddd;
+    border-radius: .5rem;
+    overflow: visible;
+    transition: box-shadow 0.2s ease;
+}
+
+    .card-file:hover {
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        cursor: pointer;
+    }
+
+    .card-file img.cover {
+        width: 100%;
+        height: 150px;
+        object-fit: contain;
+        background: #f9f9f9;
+        padding: 10px;
+    }
+
+    .card-file .file-title {
+        font-weight: 600;
+        font-size: .95rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .card-file .file-meta {
+        font-size: .8rem;
+        color: #666;
+    }
+
+    .card-file .action-bar {
+        display: flex;
+        justify-content: flex-end;
+        gap: .25rem;
+        margin-top: .5rem;
+        position: relative;
+    }
+
+    .card-file .other-actions {
+        display: none;
+    }
+
+    .card-file.active .other-actions {
+        display: flex;
+    }
+
+/* Tăng z-index cho dropdown menu để chắn chắn hiển thị trên sidebar */
+.dropdown-menu {
+    z-index: 2200;
+}
+
+.file-sidebar {
+    position: fixed;
+    top: 0;
+    right: -400px; /* ẩn ban đầu */
+    width: 400px;
+    height: 100%;
+    background: #fff;
+    box-shadow: -2px 0 8px rgba(0,0,0,0.2);
+    padding: 20px;
+    overflow-y: auto;
+    transition: right 0.3s ease-in-out;
+    z-index: 1050; /* nổi hơn content */
+}
+
+    .file-sidebar.show {
+        right: 0; /* trượt vào */
+    }
+
+    .file-sidebar .close {
+        position: absolute;
+        top: 10px;
+        right: 10px; /* chuyển sang phải */
+        background: transparent;
+        border: none;
+        font-size: 22px;
+        cursor: pointer;
+    }
+
+.sidebar-header {
+    padding: 1rem;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.sidebar-body {
+    padding: 1rem;
+}
+
+.file-header {
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+}
+
+.btn-lg-square {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+}

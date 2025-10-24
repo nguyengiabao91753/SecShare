@@ -1,136 +1,220 @@
 ﻿@page "/receive"
 @rendermode InteractiveServer
+@* UI-only. Code-behind lives in Receive.razor.cs *@
 
-@inject NavigationManager Navigation
+@using System.Globalization
+@inject NavigationManager Navigation;
 
-
-<!-- Content Header (Page header) -->
+<!-- ------------------- PAGE HEADER ------------------- -->
 <div class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
                 <div class="row file-header">
-                    <button type="button" class="btn btn-lg btn-lg-square btn-outline-secondary m-2" @onclick="@(() => Navigation.NavigateTo("/myspace"))">
+                    <button type="button" class="btn btn-lg btn-lg-square btn-outline-secondary m-2"
+                            @onclick="@(() => Navigation.NavigateTo("/myspace"))">
                         <i class="fa fa-arrow-left"></i>
                     </button>
-
-                    <h1 class="m-0">My recieved files</h1>
+                    <h1 class="m-0">My Received Files</h1>
                 </div>
-            </div><!-- /.col -->
+            </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><a href="/myspace">Home</a></li>
-                    <li class="breadcrumb-item active">Recieves share</li>
+                    <li class="breadcrumb-item active">Received Share</li>
                 </ol>
-            </div><!-- /.col -->
-        </div><!-- /.row -->
-    </div><!-- /.container-fluid -->
+            </div>
+        </div>
+    </div>
 </div>
-<!-- /.content-header -->
-<!-- Main content -->
+
+<!-- ------------------- FILTER SECTION ------------------- -->
 <div class="container mt-4">
-    <!-- Filter Section -->
     <div class="filter-section">
         <div class="row">
             <div class="col-md-9">
                 <div class="input-group mb-3">
-                    <input type="text" class="form-control" placeholder="Search by name">
+                    <input type="text" class="form-control" placeholder="Search by name"
+                           @bind="searchQuery" @bind:event="oninput" />
                     <div class="input-group-append">
-                        <button class="btn btn-outline-secondary" type="button"><i class="fas fa-search"></i></button>
+                        <button class="btn btn-outline-secondary" @onclick="ApplyFilter">
+                            <i class="fas fa-search"></i>
+                        </button>
                     </div>
                 </div>
             </div>
             <div class="col-md-3">
-                <select class="form-control">
-                    <option> Sort by</option>
-                    <option>Earliest Recieved Date</option>
-                    <option>Latest Recieved Date</option>
+                <select class="form-control" @onchange="OnSortChange">
+                    <option value="">Sort by</option>
+                    <option value="asc">Earliest Received</option>
+                    <option value="desc">Latest Received</option>
                 </select>
             </div>
         </div>
     </div>
 
-    <!-- File Cards -->
+    <!-- ------------------- FILE GRID ------------------- -->
     <div class="container mt-3">
         <div class="row">
-            @foreach (var file in listFiles)
+            @if (FilteredFiles?.Any() == true)
             {
+                foreach (var file in FilteredFiles)
+                {
+                    <div class="col-md-3 mb-4">
+                        <div class="card-file @(SelectedFile == file ? "active" : "")"
+                             @ondblclick="@(() => OnOpenFile(file))"
+                             @onmouseover="() => isHover = true"
+                             @onmouseout="() => isHover = false"
+                             style="
+            position: relative;
+            border: 1px solid #ddd;
+            border-radius: .5rem;
+            overflow: visible;
+            transition: box-shadow 0.2s ease;
+            @(isHover ? "box-shadow: 0 4px 12px rgba(0,0,0,0.1); cursor: pointer;" : "")
+                 ">
 
+                            <img class="cover" src="@GetFileIcon(file.FileName)" alt="File Icon"
+                                 style="
+                width: 100%;
+                height: 150px;
+                object-fit: contain;
+                background: #f9f9f9;
+                padding: 10px;
+                     " />
 
-                <div class="col-md-3 mb-4">
-                    <div class="card-file"
-                    data-filename="@file.FileName"
-                    data-sharedby="@file.OwnerEmail"
-                    data-email="@file.OwnerEmail"
-                    data-url="https://example.com/files/Report.docx"
-                    data-dateshared="@file.UpdatedAt"
-                    data-type="docx">
-                        <img class="cover" alt="cover">
-                        <div class="card-body">
-                            <div class="file-title">@file.FileName</div>
-                            <div class="file-meta">Shared by @file.OwnerEmail • @file.UpdatedAt</div>
-
-                            <div class="action-bar">
-                                <div class="btn-group other-actions">
-                                    <button class="btn btn-sm btn-light btn-preview" title="View" @onclick="() => ViewFileAsync(file.Id.ToString())"><i class="fas fa-eye"></i></button>
-                                    
+                            <div class="card-body">
+                                <div class="file-title"
+                                     style="
+                    font-weight: 600;
+                    font-size: .95rem;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                         ">
+                                    @file.FileName
                                 </div>
 
-                                <div class="btn-group ml-2">
-                                    <button class="btn btn-sm btn-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="fas fa-ellipsis-h"></i>
-                                    </button>
-                                    <div class="dropdown-menu dropdown-menu-right">
-                                        <a class="dropdown-item" >Details</a>
-                                        <a class="dropdown-item" >Share</a>
-                                        <a class="dropdown-item" >Rename</a>
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item text-danger" >Delete</a>
+                                <div class="file-meta"
+                                     style="
+                    font-size: .8rem;
+                    color: #666;
+                         ">
+                                    Shared by @file.OwnerEmail • @FormatDate(file.UpdatedAt)
+                                </div>
+
+                                <div class="action-bar"
+                                     style="
+                    display: flex;
+                    justify-content: flex-end;
+                    gap: .25rem;
+                    margin-top: .5rem;
+                    position: relative;
+                         ">
+                                    @* <div class="btn-group other-actions" *@
+                                    @*      style="@(SelectedFile == file ? "display: flex;" : "display: none;")"> *@
+                                    @*     <button class="btn btn-sm btn-light btn-preview" *@
+                                    @*             title="Preview" *@
+                                    @*     @onclick:preventDefault *@
+                                    @*     @onclick:stopPropagation *@
+                                    @*             @onclick="() => ShowSidebar(file)"> *@
+                                    @*         <i class="fas fa-eye"></i> *@
+                                    @*     </button> *@
+                                    @* </div> *@
+
+                                    <div class="btn-group ml-2">
+                                        <button class="btn btn-sm btn-light dropdown-toggle"
+                                                type="button"
+                                                data-toggle="dropdown"
+                                                aria-haspopup="true"
+                                                aria-expanded="false">
+                                            <i class="fas fa-ellipsis-h"></i>
+                                        </button>
+                                        <div class="dropdown-menu dropdown-menu-right"
+                                             style="z-index: 2200;">
+                                            <button class="dropdown-item" @onclick="() => ShowSidebar(file)">Details</button>
+                                            <button class="dropdown-item" @onclick="() => OnOpenFile(file)">Open</button>
+                                            <button class="dropdown-item">Rename</button>
+                                            <div class="dropdown-divider"></div>
+                                            <button class="dropdown-item text-danger">Delete</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                     </div>
+                }
+            }
+            else
+            {
+                <div class="col-12 text-center text-muted">
+                    No files found.
                 </div>
-
             }
         </div>
     </div>
 
-    <!--Sidebar-->
-    @if (listFiles != null && listFiles.Any())
-    {
-        <div id="fileDetailSidebar" class="file-sidebar">
-            <div class="sidebar-header">
-                <button class="close">&times;</button>
-                <h4>Chi tiết tập tin</h4>
-            </div>
-            <div class="sidebar-body">
-                <p><b>Tên file:</b> <span id="fileName"></span></p>
-                <p><b>Người chia sẻ:</b> <span id="fileOwner"></span></p>
-                <p><b>Email:</b> <span id="fileEmail"></span></p>
-                <p><b>Ngày chia sẻ:</b> <span id="fileModified"></span></p>
-            </div>
-        </div>
-    }
-
-
-    <!-- Pagination -->
+    <!-- ------------------- PAGINATION (placeholder) ------------------- -->
     <nav aria-label="Page navigation">
         <ul class="pagination justify-content-center">
-            <li class="page-item disabled">
-                <a class="page-link" tabindex="-1">Previous</a>
-            </li>
-            <li class="page-item active"><a class="page-link" >1</a></li>
-            <li class="page-item"><a class="page-link" >2</a></li>
-            <li class="page-item"><a class="page-link" >3</a></li>
-            <li class="page-item">
-                <a class="page-link" >Next</a>
-            </li>
+            <li class="page-item disabled"><a class="page-link">Previous</a></li>
+            <li class="page-item active"><a class="page-link">1</a></li>
+            <li class="page-item"><a class="page-link">2</a></li>
+            <li class="page-item"><a class="page-link">3</a></li>
+            <li class="page-item"><a class="page-link">Next</a></li>
         </ul>
     </nav>
+</div>
 
-    <script src="~/client/dist/js/pages/recieve.js"></script>
+<!-- ------------------- SIDEBAR ------------------- -->
+@if (SelectedFile != null)
+{
+    <div id="fileDetailSidebar" class="file-sidebar show" @onclick:stopPropagation
+         style="
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 400px;
+            height: 100%;
+            background: #fff;
+            box-shadow: -2px 0 8px rgba(0,0,0,0.2);
+            padding: 20px;
+            overflow-y: auto;
+            transition: right 0.3s ease-in-out;
+            z-index: 1050;
+             ">
+        <div class="sidebar-header"
+             style="
+                padding: 1rem;
+                border-bottom: 1px solid #dee2e6;
+                 ">
+            <h4>Chi tiết tập tin</h4>
+            <button class="close"
+                    @onclick="CloseSidebar"
+                    style="
+                        position: absolute;
+                        top: 10px;
+                        right: 10px;
+                        background: transparent;
+                        border: none;
+                        font-size: 22px;
+                        cursor: pointer;
+                        ">
+                &times;
+            </button>
+        </div>
+
+        <div class="sidebar-body" style="padding: 1rem;">
+            <p><b>Tên file:</b> @SelectedFile.FileName</p>
+            <p><b>Người chia sẻ:</b> @SelectedFile.OwnerEmail</p>
+            <p><b>Email:</b> @SelectedFile.OwnerEmail</p>
+            <p><b>Ngày chia sẻ:</b> @FormatDate(SelectedFile.UpdatedAt)</p>
+            <div class="mt-3">
+                <button class="btn btn-sm btn-primary" @onclick="() => OnOpenFile(SelectedFile)">Open</button>
+                <button class="btn btn-sm btn-secondary ml-2" @onclick="CloseSidebar">Close</button>
+            </div>
+        </div>
     </div>
-    <!-- /.content -->
+}
+
+<script src="/client/dist/js/pages/recieve.js" defer></script>

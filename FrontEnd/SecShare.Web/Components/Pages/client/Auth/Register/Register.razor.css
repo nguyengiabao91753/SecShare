@@ -1,56 +1,245 @@
-﻿.card {
-    border: none;
-    border-radius: 12px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+﻿/* ============= Receive.razor.css (replace whole file) ============= */
+
+/* --- Configurable variables --- */
+:root {
+    --sidebar-width: 360px; /* change width here */
+    --sidebar-bg: #ffffff;
+    --sidebar-shadow: -3px 0 18px rgba(0,0,0,0.12);
+    --sidebar-z: 9999;
 }
 
-    .card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+/* ---------- Card file (cards grid) ---------- */
+.card-file {
+    position: relative;
+    border: 1px solid #e6e6e6;
+    border-radius: 8px;
+    overflow: visible; /* ensure dropdown isn't clipped */
+    background: #fff;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+    -webkit-font-smoothing: antialiased;
+}
+
+    .card-file:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+        cursor: pointer;
     }
 
-.card-title {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    .card-file.active {
+        border-color: #007bff;
+        background: #f8faff;
+    }
+
+    /* thumbnail */
+    .card-file img.cover {
+        width: 100%;
+        height: 150px;
+        object-fit: contain;
+        background: #f9f9f9;
+        padding: 10px;
+        display: block;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+    }
+
+    /* body inside card */
+    .card-file .card-body {
+        padding: 12px;
+    }
+
+    .card-file .file-title {
+        font-weight: 600;
+        font-size: 0.98rem;
+        color: #222;
+        margin-bottom: 6px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .card-file .file-meta {
+        font-size: 0.82rem;
+        color: #6c757d;
+    }
+
+    /* action bar */
+    .card-file .action-bar {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: .35rem;
+        margin-top: 10px;
+    }
+
+    .card-file .other-actions {
+        display: none;
+    }
+
+    .card-file.active .other-actions {
+        display: flex;
+    }
+
+/* preview button */
+.btn-preview {
+    padding: 6px 8px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+}
+
+/* ensure dropdown toggle visible */
+.btn-sm.btn-light.dropdown-toggle {
+    border-radius: 6px;
+}
+
+/* ---------- Sidebar (fixed to right) ---------- */
+.file-sidebar {
+    --w: var(--sidebar-width);
+    position: fixed !important;
+    top: 0 !important;
+    right: calc(-1 * var(--w)) !important; /* hidden by default */
+    width: var(--w) !important;
+    height: 100vh !important;
+    background: var(--sidebar-bg);
+    box-shadow: var(--sidebar-shadow);
+    overflow-y: auto !important;
+    transition: right 0.28s ease-in-out;
+    z-index: var(--sidebar-z) !important;
+    padding: 18px;
+    -webkit-overflow-scrolling: touch;
+    will-change: right;
+}
+
+    /* visible state */
+    .file-sidebar.show {
+        right: 0 !important;
+    }
+
+    /* header inside sidebar */
+    .file-sidebar .sidebar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 8px;
+        border-bottom: 1px solid #e9ecef;
+        position: sticky;
+        top: 0;
+        background: var(--sidebar-bg);
+        z-index: 3;
+    }
+
+    /* close button on top-right */
+    .file-sidebar .close {
+        background: transparent;
+        border: none;
+        font-size: 22px;
+        line-height: 1;
+        cursor: pointer;
+        color: #333;
+        padding: 6px;
+        border-radius: 6px;
+    }
+
+        .file-sidebar .close:hover {
+            background: #f1f1f1;
+        }
+
+    /* sidebar body */
+    .file-sidebar .sidebar-body {
+        padding-top: 12px;
+        padding-bottom: 32px;
+    }
+
+    .file-sidebar p {
+        margin-bottom: 12px;
+        color: #333;
+        font-size: 0.95rem;
+    }
+
+/* ---------- Push content when sidebar open ---------- */
+/* AdminLTE typically has .wrapper > .content-wrapper; we try both selectors */
+.with-sidebar .content-wrapper,
+.with-sidebar .wrapper > .content-wrapper,
+.with-sidebar .main-footer {
+    transition: margin-right 0.28s ease-in-out;
+    margin-right: var(--sidebar-width) !important;
+}
+
+/* ---------- Dropdown and stacking fixes ---------- */
+/* Make sure dropdowns appear above the sidebar */
+.dropdown-menu,
+.dropdown-menu.dropdown-menu-right {
+    z-index: calc(var(--sidebar-z) + 10) !important;
+}
+
+/* When a dropdown is inside a card near sidebar, ensure it isn't hidden */
+.btn-group, .btn-group .dropdown-menu {
+    overflow: visible !important;
+}
+
+/* ---------- Responsive: mobile behavior ---------- */
+@media (max-width: 767.98px) {
+    :root {
+        --sidebar-width: 100vw;
+    }
+
+    .file-sidebar {
+        width: 100vw !important;
+        right: -100vw !important;
+        height: 100vh !important;
+        padding: 16px;
+        background: var(--sidebar-bg);
+    }
+
+        .file-sidebar.show {
+            right: 0 !important;
+        }
+
+    /* on mobile we don't push content (overlay) */
+    .with-sidebar .content-wrapper,
+    .with-sidebar .main-footer {
+        margin-right: 0 !important;
+    }
+}
+
+/* ---------- Accessibility and small UX tweaks ---------- */
+.file-sidebar:focus {
+    outline: none;
+}
+
+.file-sidebar .sidebar-header h4 {
+    margin: 0;
+    font-size: 1.05rem;
     font-weight: 600;
-    font-size: 29px;
 }
 
-.form-control {
-    border-radius: 8px;
-    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+.file-sidebar .sidebar-body b {
+    display: block;
+    margin-bottom: 6px;
+    color: #333;
 }
 
-    .form-control:focus {
-        border-color: #4b6cb7;
-        box-shadow: 0 0 0 0.2rem rgba(75, 108, 183, 0.25);
-    }
+/* ---------- Safety: ensure highest stacking if still occluded ---------- */
+body .file-sidebar {
+    z-index: 2147483646 !important;
+}
+/* near max for browsers */
 
-.btn-primary {
-    background: linear-gradient(90deg, #4b6cb7, #182848);
-    border: none;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    font-weight: 500;
+/* ---------- Utility tweaks for existing markup ---------- */
+.file-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-left: 8px;
 }
 
-    .btn-primary:hover {
-        background: linear-gradient(90deg, #5e81ac, #1e3a8a);
-    }
-
-    .btn-primary:disabled {
-        background: #6c757d;
-        opacity: 0.65;
-    }
-
-.alert-danger {
-    border-radius: 8px;
+.filter-section {
+    margin-bottom: 12px;
 }
 
-@media (max-width: 576px) {
-    .card {
-        margin: 0 1rem;
-    }
+/* small print: make dropdown toggles visually consistent */
+.dropdown-toggle {
+    background: transparent !important;
+    border: none !important;
 }
 
-.validation-message {
-    color: #ffffff !important;
-}
+/* ---------- End of Receive.razor.css ---------- */

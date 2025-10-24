@@ -275,7 +275,16 @@ public class DocumentAPIService : IDocumentAPIService
             return new ResponseDTO
             {
                 IsSuccess = true,
-                Message = "File shared successfully"
+                Message = "File shared successfully",
+                Result = new DocumentDto
+                {
+                    Id = document.Id,
+                    FileName = document.FileName,
+                    FileSize = document.FileSize,
+                    FileType = Path.GetExtension(document.FileName)?.TrimStart('.'),
+                    UpdatedAt = document.UpdatedAt,
+                    OwnerEmail = user.Email
+                }
             };
         }
         catch (Exception ex)
@@ -309,7 +318,7 @@ public class DocumentAPIService : IDocumentAPIService
         try
         {
             var listDocuments = await _db.Shares
-                                .Where(s => s.ReceiverId == UserId)
+                                .Where(s => s.ReceiverId == UserId && s.SenderId != UserId)
                                 .ToListAsync();
             var documentDtos = new List<DocumentDto>();
             foreach (var share in listDocuments)
@@ -324,6 +333,7 @@ public class DocumentAPIService : IDocumentAPIService
                         FileSize = document.FileSize,
                         FileType = Path.GetExtension(document.FileName)?.TrimStart('.'),
                         UpdatedAt = document.UpdatedAt,
+                        OwnerEmail = document.OwnerId
                     });
                 }
             }
