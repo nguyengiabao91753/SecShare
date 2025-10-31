@@ -34,6 +34,9 @@ public partial class MySpace
     [SupplyParameterFromForm]
     private List<UserDto> listUsers { get; set; } = new();
 
+    [SupplyParameterFromForm]
+    private List<UserLogDto> listActivities { get; set; } = new();
+
     private EditContext? editContext;
     private EditContext? editContextShare;
     private bool isSubmit = false;
@@ -59,7 +62,7 @@ public partial class MySpace
             var rs = await _documentService.ListFiles();
             listFiles = JsonConvert.DeserializeObject<List<DocumentDto>>(Convert.ToString(rs.Result));
 
-            
+           
 
             StateHasChanged(); // cập nhật UI
         }
@@ -190,6 +193,7 @@ public partial class MySpace
         selectedFile = file;
         isSidebarOpen = true;
         await LoadUserShare();
+        await LoadUserActivity();
     }
 
     /// <summary>
@@ -227,5 +231,11 @@ public partial class MySpace
     {
         var us = await _documentService.GetListUsersShared(selectedFile.Id.ToString());
         listUsers = JsonConvert.DeserializeObject<List<UserDto>>(Convert.ToString(us.Result));
+    }
+
+    private async Task LoadUserActivity()
+    {
+        var ua = await _documentService.GetReceiverActivity(selectedFile.Id.ToString());
+        listActivities = JsonConvert.DeserializeObject<List<UserLogDto>>(Convert.ToString(ua.Result));
     }
 }

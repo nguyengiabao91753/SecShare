@@ -1,201 +1,205 @@
 ﻿@page "/group"
 
-<div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    <div class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                    <div class="row file-header">
-                        <button type="button" class="btn btn-lg btn-lg-square btn-outline-secondary m-2" onclick="window.location.href='../index.html'">
-                            <i class="fa fa-arrow-left"></i>
-                        </button>
-
-                        <h1 class="m-0">My Groups</h1>
-                    </div>
-                </div><!-- /.col -->
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="../index.html">Home</a></li>
-                        <li class="breadcrumb-item active">Groups</li>
-                    </ol>
-                </div><!-- /.col -->
-            </div><!-- /.row -->
-        </div><!-- /.container-fluid -->
+<div class="content-wrapper flex items-center justify-center h-screen bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500" style="align-items: center">
+    <div class="relative z-10 text-center px-6" >
+        <h1 class="text-6xl font-bold mb-4 drop-shadow-lg">🚀 Coming Soon</h1>
+        <p class="text-lg mb-8 text-white/80">We're crafting something amazing for you. Stay tuned!</p>
     </div>
+    <!-- Content Header (Page header) -->
+    @* <div class="content-header"> *@
+    @*     <div class="container-fluid"> *@
+    @*         <div class="row mb-2"> *@
+    @*             <div class="col-sm-6"> *@
+    @*                 <div class="row file-header"> *@
+    @*                     <button type="button" class="btn btn-lg btn-lg-square btn-outline-secondary m-2" onclick="window.location.href='../index.html'"> *@
+    @*                         <i class="fa fa-arrow-left"></i> *@
+    @*                     </button> *@
+
+    @*                     <h1 class="m-0">My Groups</h1> *@
+    @*                 </div> *@
+    @*             </div><!-- /.col --> *@
+    @*             <div class="col-sm-6"> *@
+    @*                 <ol class="breadcrumb float-sm-right"> *@
+    @*                     <li class="breadcrumb-item"><a href="../index.html">Home</a></li> *@
+    @*                     <li class="breadcrumb-item active">Groups</li> *@
+    @*                 </ol> *@
+    @*             </div><!-- /.col --> *@
+    @*         </div><!-- /.row --> *@
+    @*     </div><!-- /.container-fluid --> *@
+    @* </div> *@
     <!-- /.content-header -->
     <!-- Main content -->
-    <div class="container mt-4">
-        <!-- Group's Messages -->
-        <div class="d-flex h-100">
-            <!-- Sidebar Group -->
-            <div id="groupSidebar" class="group-sidebar border-right" style="width: 30%; background: #fff; overflow-y: auto; transition: all 0.3s;">
-                <div class="p-3 border-bottom d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">Nhóm chat</h5>
-                    <!-- Nút đóng -->
-                    <button id="toggleSidebarClose" class="btn btn-sm btn-light">
-                        <i class="fa fa-angle-left"></i>
-                    </button>
-                </div>
+    @* <div class="container mt-4"> *@
+    @*     <!-- Group's Messages --> *@
+    @*     <div class="d-flex h-100"> *@
+    @*         <!-- Sidebar Group --> *@
+    @*         <div id="groupSidebar" class="group-sidebar border-right" style="width: 30%; background: #fff; overflow-y: auto; transition: all 0.3s;"> *@
+    @*             <div class="p-3 border-bottom d-flex justify-content-between align-items-center"> *@
+    @*                 <h5 class="mb-0">Nhóm chat</h5> *@
+    @*                 <!-- Nút đóng --> *@
+    @*                 <button id="toggleSidebarClose" class="btn btn-sm btn-light"> *@
+    @*                     <i class="fa fa-angle-left"></i> *@
+    @*                 </button> *@
+    @*             </div> *@
 
-                <!-- Search + Create -->
-                <div class="p-3 border-bottom">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Search by name">
-                        <div class="input-group-append">
-                            <button class="btn btn-outline-secondary" type="button">
-                                <i class="fas fa-search"></i>
-                            </button>
-                            <!-- Nút tạo nhóm -->
-                            <button class="btn btn-primary ml-2" type="button">
-                                <i class="fas fa-plus-square"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
+    @*             <!-- Search + Create --> *@
+    @*             <div class="p-3 border-bottom"> *@
+    @*                 <div class="input-group"> *@
+    @*                     <input type="text" class="form-control" placeholder="Search by name"> *@
+    @*                     <div class="input-group-append"> *@
+    @*                         <button class="btn btn-outline-secondary" type="button"> *@
+    @*                             <i class="fas fa-search"></i> *@
+    @*                         </button> *@
+    @*                         <!-- Nút tạo nhóm --> *@
+    @*                         <button class="btn btn-primary ml-2" type="button"> *@
+    @*                             <i class="fas fa-plus-square"></i> *@
+    @*                         </button> *@
+    @*                     </div> *@
+    @*                 </div> *@
+    @*             </div> *@
 
-                <!-- Danh sách nhóm -->
-                <ul id="groupList" class="list-unstyled mb-0">
-                    <li class="p-3 d-flex align-items-center group-item active" data-group="group1" style="cursor: pointer;">
-                        <img src="../dist/img/photo1.png" class="rounded-circle mr-2">
-                        <div>
-                            <div class="font-weight-bold">Nhóm 1</div>
-                            <small>Tin nhắn mới nhất...</small>
-                        </div>
-                    </li>
-                    <li class="p-3 d-flex align-items-center group-item" data-group="group2" style="cursor: pointer;">
-                        <img src="../dist/img/photo2.png" class="rounded-circle mr-2">
-                        <div>
-                            <div class="font-weight-bold">Nhóm 2</div>
-                            <small>Ai đó đã gửi file...</small>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-
-
-            <!-- Chat content -->
-            <div class="flex-grow-1 d-flex flex-column" style="width: 60%;">
-                <!-- Header -->
-                <div class="p-3 border-bottom d-flex align-items-center justify-content-between">
-                    <div class="d-flex align-items-center">
-                        <!-- Nút mở sidebar khi ẩn -->
-                        <button id="toggleSidebarOpen" class="btn btn-sm btn-light mr-2 d-none">
-                            <i class="fa fa-angle-right"></i>
-                        </button>
-                        <img id="chatAvatar" src="../dist/img/photo1.png" class="rounded-circle mr-2">
-                        <h6 id="chatTitle" class="mb-0">Nhóm 1</h6>
-                    </div>
-                    <div>
-                        <button class="btn btn-sm btn-outline-secondary"><i class="fa fa-phone"></i></button>
-                        <button class="btn btn-sm btn-outline-secondary"><i class="fa fa-video"></i></button>
-                        <button class="btn btn-sm btn-outline-secondary"><i class="fa fa-info-circle"></i></button>
-                    </div>
-                </div>
-
-                <!-- Messages -->
-                <div id="chatMessages" class="chat-messages flex-grow-1 p-3" style="overflow-y: auto; background: #fafafa;">
-                    <div class="d-flex mb-3">
-                        <img src="../dist/img/photo1.png" class="rounded-circle mr-2">
-                        <div>
-                            <div class="bg-light p-2 rounded">Xin chào mọi người 👋</div>
-                            <small class="text-muted">18:54</small>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Input -->
-                <div class="p-3 border-top">
-                    <div class="input-group">
-                        <!-- Nút gửi file -->
-                        <div class="input-group-prepend" style="padding-right: 5px;">
-                            <button class="btn btn-outline-secondary rounded" type="button">
-                                <i class="fa fa-paperclip"></i>
-                            </button>
-                        </div>
-
-                        <!-- Ô nhập tin nhắn -->
-                        <input type="text" class="form-control rounded" placeholder="Nhập tin nhắn...">
-
-                        <!-- Nút gửi -->
-                        <div class="input-group-append" style="padding-left: 5px;">
-                            <button class="btn btn-primary rounded" type="button">
-                                <i class="fa fa-paper-plane"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    @*             <!-- Danh sách nhóm --> *@
+    @*             <ul id="groupList" class="list-unstyled mb-0"> *@
+    @*                 <li class="p-3 d-flex align-items-center group-item active" data-group="group1" style="cursor: pointer;"> *@
+    @*                     <img src="../dist/img/photo1.png" class="rounded-circle mr-2"> *@
+    @*                     <div> *@
+    @*                         <div class="font-weight-bold">Nhóm 1</div> *@
+    @*                         <small>Tin nhắn mới nhất...</small> *@
+    @*                     </div> *@
+    @*                 </li> *@
+    @*                 <li class="p-3 d-flex align-items-center group-item" data-group="group2" style="cursor: pointer;"> *@
+    @*                     <img src="../dist/img/photo2.png" class="rounded-circle mr-2"> *@
+    @*                     <div> *@
+    @*                         <div class="font-weight-bold">Nhóm 2</div> *@
+    @*                         <small>Ai đó đã gửi file...</small> *@
+    @*                     </div> *@
+    @*                 </li> *@
+    @*             </ul> *@
+    @*         </div> *@
 
 
-        <!--Js cho phan Messages-->
-        <script>
-              const sidebar = document.getElementById("groupSidebar");
-            const btnClose = document.getElementById("toggleSidebarClose");
-            const btnOpen = document.getElementById("toggleSidebarOpen");
+    @*         <!-- Chat content --> *@
+    @*         <div class="flex-grow-1 d-flex flex-column" style="width: 60%;"> *@
+    @*             <!-- Header --> *@
+    @*             <div class="p-3 border-bottom d-flex align-items-center justify-content-between"> *@
+    @*                 <div class="d-flex align-items-center"> *@
+    @*                     <!-- Nút mở sidebar khi ẩn --> *@
+    @*                     <button id="toggleSidebarOpen" class="btn btn-sm btn-light mr-2 d-none"> *@
+    @*                         <i class="fa fa-angle-right"></i> *@
+    @*                     </button> *@
+    @*                     <img id="chatAvatar" src="../dist/img/photo1.png" class="rounded-circle mr-2"> *@
+    @*                     <h6 id="chatTitle" class="mb-0">Nhóm 1</h6> *@
+    @*                 </div> *@
+    @*                 <div> *@
+    @*                     <button class="btn btn-sm btn-outline-secondary"><i class="fa fa-phone"></i></button> *@
+    @*                     <button class="btn btn-sm btn-outline-secondary"><i class="fa fa-video"></i></button> *@
+    @*                     <button class="btn btn-sm btn-outline-secondary"><i class="fa fa-info-circle"></i></button> *@
+    @*                 </div> *@
+    @*             </div> *@
 
-            // Đóng sidebar
-            btnClose.addEventListener("click", () => {
-              sidebar.classList.add("collapsed");
-              btnOpen.classList.remove("d-none"); // hiện nút mở
-            });
+    @*             <!-- Messages --> *@
+    @*             <div id="chatMessages" class="chat-messages flex-grow-1 p-3" style="overflow-y: auto; background: #fafafa;"> *@
+    @*                 <div class="d-flex mb-3"> *@
+    @*                     <img src="../dist/img/photo1.png" class="rounded-circle mr-2"> *@
+    @*                     <div> *@
+    @*                         <div class="bg-light p-2 rounded">Xin chào mọi người 👋</div> *@
+    @*                         <small class="text-muted">18:54</small> *@
+    @*                     </div> *@
+    @*                 </div> *@
+    @*             </div> *@
 
-            // Mở sidebar
-            btnOpen.addEventListener("click", () => {
-              sidebar.classList.remove("collapsed");
-              btnOpen.classList.add("d-none"); // ẩn nút mở
-            });
+    @*             <!-- Input --> *@
+    @*             <div class="p-3 border-top"> *@
+    @*                 <div class="input-group"> *@
+    @*                     <!-- Nút gửi file --> *@
+    @*                     <div class="input-group-prepend" style="padding-right: 5px;"> *@
+    @*                         <button class="btn btn-outline-secondary rounded" type="button"> *@
+    @*                             <i class="fa fa-paperclip"></i> *@
+    @*                         </button> *@
+    @*                     </div> *@
 
-            // Chuyển nhóm chat
-            const groups = {
-              group1: {
-                title: "Nhóm 1",
-                avatar: "../dist/img/photo1.png",
-                messages: `
-                  <div class="d-flex mb-3">
-                    <img src="../dist/img/avatar.png" class="rounded-circle mr-2">
-                    <div>
-                      <div class="bg-light p-2 rounded">Xin chào Nhóm 1 👋</div>
-                      <small class="text-muted">18:54</small>
-                    </div>
-                  </div>`
-              },
-              group2: {
-                title: "Nhóm 2",
-                avatar: "../dist/img/photo2.png",
-                messages: `
-                  <div class="d-flex mb-3">
-                    <img src="../dist/img/avatar2.png" class="rounded-circle mr-2">
-                    <div>
-                      <div class="bg-light p-2 rounded">Xin chào Nhóm 2 🎉</div>
-                      <small class="text-muted">19:00</small>
-                    </div>
-                  </div>`
-              }
-            };
+    @*                     <!-- Ô nhập tin nhắn --> *@
+    @*                     <input type="text" class="form-control rounded" placeholder="Nhập tin nhắn..."> *@
 
-            const chatTitle = document.getElementById("chatTitle");
-            const chatAvatar = document.getElementById("chatAvatar");
-            const chatMessages = document.getElementById("chatMessages");
+    @*                     <!-- Nút gửi --> *@
+    @*                     <div class="input-group-append" style="padding-left: 5px;"> *@
+    @*                         <button class="btn btn-primary rounded" type="button"> *@
+    @*                             <i class="fa fa-paper-plane"></i> *@
+    @*                         </button> *@
+    @*                     </div> *@
+    @*                 </div> *@
+    @*             </div> *@
+    @*         </div> *@
+    @*     </div> *@
 
-            document.querySelectorAll(".group-item").forEach(item => {
-              item.addEventListener("click", function () {
-                // Bỏ active cũ
-                document.querySelectorAll(".group-item").forEach(el => el.classList.remove("active"));
-                this.classList.add("active");
 
-                // Lấy group id
-                const groupId = this.getAttribute("data-group");
-                const group = groups[groupId];
+    @*     <!--Js cho phan Messages--> *@
+    @*     <script> *@
+    @*           const sidebar = document.getElementById("groupSidebar"); *@
+    @*         const btnClose = document.getElementById("toggleSidebarClose"); *@
+    @*         const btnOpen = document.getElementById("toggleSidebarOpen"); *@
 
-                // Cập nhật header + messages
-                chatTitle.textContent = group.title;
-                chatAvatar.src = group.avatar;
-                chatMessages.innerHTML = group.messages;
-              });
-            });
+    @*         // Đóng sidebar *@
+    @*         btnClose.addEventListener("click", () => { *@
+    @*           sidebar.classList.add("collapsed"); *@
+    @*           btnOpen.classList.remove("d-none"); // hiện nút mở *@
+    @*         }); *@
 
-        </script>
-    </div>
+    @*         // Mở sidebar *@
+    @*         btnOpen.addEventListener("click", () => { *@
+    @*           sidebar.classList.remove("collapsed"); *@
+    @*           btnOpen.classList.add("d-none"); // ẩn nút mở *@
+    @*         }); *@
+
+    @*         // Chuyển nhóm chat *@
+    @*         const groups = { *@
+    @*           group1: { *@
+    @*             title: "Nhóm 1", *@
+    @*             avatar: "../dist/img/photo1.png", *@
+    @*             messages: ` *@
+    @*               <div class="d-flex mb-3"> *@
+    @*                 <img src="../dist/img/avatar.png" class="rounded-circle mr-2"> *@
+    @*                 <div> *@
+    @*                   <div class="bg-light p-2 rounded">Xin chào Nhóm 1 👋</div> *@
+    @*                   <small class="text-muted">18:54</small> *@
+    @*                 </div> *@
+    @*               </div>` *@
+    @*           }, *@
+    @*           group2: { *@
+    @*             title: "Nhóm 2", *@
+    @*             avatar: "../dist/img/photo2.png", *@
+    @*             messages: ` *@
+    @*               <div class="d-flex mb-3"> *@
+    @*                 <img src="../dist/img/avatar2.png" class="rounded-circle mr-2"> *@
+    @*                 <div> *@
+    @*                   <div class="bg-light p-2 rounded">Xin chào Nhóm 2 🎉</div> *@
+    @*                   <small class="text-muted">19:00</small> *@
+    @*                 </div> *@
+    @*               </div>` *@
+    @*           } *@
+    @*         }; *@
+
+    @*         const chatTitle = document.getElementById("chatTitle"); *@
+    @*         const chatAvatar = document.getElementById("chatAvatar"); *@
+    @*         const chatMessages = document.getElementById("chatMessages"); *@
+
+    @*         document.querySelectorAll(".group-item").forEach(item => { *@
+    @*           item.addEventListener("click", function () { *@
+    @*             // Bỏ active cũ *@
+    @*             document.querySelectorAll(".group-item").forEach(el => el.classList.remove("active")); *@
+    @*             this.classList.add("active"); *@
+
+    @*             // Lấy group id *@
+    @*             const groupId = this.getAttribute("data-group"); *@
+    @*             const group = groups[groupId]; *@
+
+    @*             // Cập nhật header + messages *@
+    @*             chatTitle.textContent = group.title; *@
+    @*             chatAvatar.src = group.avatar; *@
+    @*             chatMessages.innerHTML = group.messages; *@
+    @*           }); *@
+    @*         }); *@
+
+    @*     </script> *@
+    @* </div> *@
 </div>

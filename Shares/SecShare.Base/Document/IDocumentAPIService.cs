@@ -21,4 +21,6 @@ public interface IDocumentAPIService
     Task<ResponseDTO> ListReceiveFileAsync(string UserId);
 
     Task<ResponseDTO> GetListUsersShared( string UserId, Guid docId);
+
+    Task<ResponseDTO> GetReceiverActivity(string UserId, Guid docId);
 }

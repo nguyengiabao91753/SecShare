@@ -1,10 +1,11 @@
-﻿@rendermode InteractiveServer
-@using SecShare.Web.Components.Layout
+﻿@rendermode @(new InteractiveServerRenderMode(prerender: false))
 
-<Router AppAssembly="typeof(Program).Assembly">
+@using SecShare.Web.Components.Layout
+@inject SecShare.Web.Services.IServices.ITokenProvider TokenProvider
+@inject NavigationManager Navigation
+<Router AppAssembly="typeof(Program).Assembly" OnNavigateAsync="OnNavigateAsync">
     <Found Context="routeData">
-        <!-- Middleware kiểm tra đăng nhập -->
-        <AuthRedirect />
+       
         <RouteView RouteData="routeData" DefaultLayout="typeof(Layout.MainLayout)" />
         <FocusOnNavigate RouteData="routeData" Selector="h1" />
     </Found>
@@ -14,3 +15,20 @@
         </LayoutView>
     </NotFound>
 </Router>
+
+@code {
+    private bool _checked = false;
+
+    private async Task OnNavigateAsync(NavigationContext args)
+    {
+        // Nếu đã ở trang login/register thì bỏ qua
+        if (args.Path.Contains("login") || args.Path.Contains("register") || args.Path.Contains("verify-otp"))
+            return;
+
+        var token = await TokenProvider.GetTokenAsync();
+        if (string.IsNullOrEmpty(token))
+        {
+            Navigation.NavigateTo("/login", forceLoad: true);
+        }
+    }
+}

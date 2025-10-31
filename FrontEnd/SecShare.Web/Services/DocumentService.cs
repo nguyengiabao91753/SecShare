@@ -66,4 +66,14 @@ public class DocumentService : IDocumentService
             
         }, withBearer: true);
     }
+
+    public async Task<ResponseDTO?> GetReceiverActivity(string docId)
+    {
+       return await _baseService.SendAsync(new RequestDTO()
+       {
+           ApiType = SD.ApiType.GET,
+           Data = docId,
+           Url = SD.DocumentAPIBase + $"/api/document/getReceiverActivity/{docId}"
+       }, withBearer: true);
+    }
 }

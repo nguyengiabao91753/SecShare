@@ -359,4 +359,26 @@ public class DocumentAPIService : IDocumentAPIService
         }
         return rs;
     }
+
+    public async Task<ResponseDTO> GetReceiverActivity(string UserId, Guid docId)
+    {
+        var rs = new ResponseDTO();
+
+        try
+        {
+            var listrs = await _db.AuditLogs.Where(a => a.UserId != UserId && a.DocumentId == docId)
+                            .OrderByDescending(a => a.Timestamp)
+                            .ToListAsync();
+            rs.Result = listrs;
+            rs.IsSuccess = true;
+
+        }
+        catch (Exception ex)
+        {
+            rs.IsSuccess = false;
+            rs.Code = "-1";
+            rs.Message = ex.Message;
+        }
+        return rs;
+    }
 }

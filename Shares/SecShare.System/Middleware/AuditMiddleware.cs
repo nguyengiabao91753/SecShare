@@ -37,7 +37,8 @@ public class AuditMiddleware
                     DocumentId = ExtractDocumentId(context.Request.Path),
                     Action = "VIEW",
                     IpAddress = ip,
-                    Timestamp = DateTime.UtcNow
+                    Timestamp = DateTime.UtcNow,
+                    DeviceInfo = "Unknown"
                 };
 
                 db.AuditLogs.Add(audit);

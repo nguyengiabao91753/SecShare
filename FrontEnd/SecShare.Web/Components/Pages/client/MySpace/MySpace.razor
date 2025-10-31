@@ -139,8 +139,8 @@ UPLOAD MODAL
                             <i class="fas fa-upload fa-3x text-primary mb-3 drop-icon"></i>
                             <p class="text-muted mb-3 fs-6">Click below or drag your file here</p>
                             <InputFile OnChange="OnFileSelected"
-                                       accept=".doc,.docx,.pdf,.txt,.jpg,.png"
-                                       class="form-control border-0 shadow-none mx-auto upload-input" />
+                            accept=".doc,.docx,.pdf,.txt,.jpg,.png"
+                            class="form-control border-0 shadow-none mx-auto upload-input" />
                         </div>
 
                         @if (isUpload)
@@ -154,8 +154,8 @@ UPLOAD MODAL
                                         <div class="col-md-4">
                                             <label class="form-label small text-muted">File Name</label>
                                             <InputText class="@($"form-control rounded-pill {GetFileNameValidationClass()}")"
-                                                       @bind-Value="uploadMyFileDto.FileName"
-                                                       placeholder="Enter file name" />
+                                            @bind-Value="uploadMyFileDto.FileName"
+                                            placeholder="Enter file name" />
                                         </div>
                                         <div class="col-md-4">
                                             <label class="form-label small text-muted">Type</label>
@@ -174,11 +174,11 @@ UPLOAD MODAL
                     <!-- Footer -->
                     <div class="modal-footer border-0 bg-white rounded-bottom-4 py-3">
                         <button type="button" class="btn btn-outline-secondary rounded-pill px-4 shadow-sm"
-                                @onclick="CloseModal">
+                        @onclick="CloseModal">
                             Cancel
                         </button>
                         <button type="submit" class="btn btn-primary rounded-pill px-4 shadow-sm"
-                                disabled="@(!isUpload)">
+                        disabled="@(!isUpload)">
                             <i class="fas fa-upload me-2"></i> Upload
                         </button>
                     </div>
@@ -262,21 +262,44 @@ SIDEBAR DETAIL
                                     <div>
                                         <button class="btn btn-secondary"> 
                                             <i class="fas fa-trash"></i>
-                                       </button>
-                                       
+                                        </button>
+
                                     </div>
-                                    
+
 
                                     @* <button class="btn btn-sm btn-outline-info"><i class="fas fa-info-circle"></i></button> *@
                                 </li>
                             }
-                            </ul>
-                            <br />
-                            <button type="submit" class="btn btn-primary w-100 py-2" disabled="@isShare">Share</button>
-                        </EditForm>
-                    </div>
-                    <div class="tab-pane fade" id="tabActivities">
-                        <p class="text-muted">Recent activities will appear here...</p>
+                        </ul>
+                        <br />
+                        <button type="submit" class="btn btn-primary w-100 py-2" disabled="@isShare">Share</button>
+                    </EditForm>
+                </div>
+                <div class="tab-pane fade" id="tabActivities">
+                    @if (listActivities != null && listActivities.Any())
+                    {
+                       
+                        @foreach ( var ua in listActivities)
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+
+                                    <p><i class="fas fa-user-circle me-2"></i>@ua.UserEmail</p>
+
+                                    <small class="d-block text-muted">@ua.Action</small>
+                                    @ua.Timestamp
+                                </div>
+
+                                
+
+
+                                
+                            </li>
+                            
+                        }
+                       
+
+                    }
                     </div>
                 </div>
                             }

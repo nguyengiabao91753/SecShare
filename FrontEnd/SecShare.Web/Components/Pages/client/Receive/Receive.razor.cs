@@ -24,12 +24,13 @@ public partial class Receive : ComponentBase
     private string sortOrder { get; set; } = string.Empty;
 
     private bool isHover = false;
-
+    private bool isLoading = true;
     // Computed filtered list (getter so UI always sees latest state)
     private IEnumerable<DocumentDto> FilteredFiles => ApplyFilterAndSort();
 
     protected override async Task OnInitializedAsync()
     {
+        isLoading = true;
         await LoadFilesAsync();
     }
 
@@ -44,6 +45,10 @@ public partial class Receive : ComponentBase
         {
             Console.WriteLine("Error loading listFiles: " + ex.Message);
             listFiles = new List<DocumentDto>();
+        }
+        finally
+        {
+            isLoading = false;
         }
 
         StateHasChanged();

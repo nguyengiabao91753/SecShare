@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using SecShare.Base.Document;
+using SecShare.Core;
 using SecShare.Core.Dtos;
 using SecShare.DocumentAPI.Services.IService;
 using System.IdentityModel.Tokens.Jwt;
@@ -86,6 +87,51 @@ public class DocumentController : ControllerBase
                 IEnumerable<UserDto> userList = JsonConvert.DeserializeObject<IEnumerable<UserDto>>(Convert.ToString(userRs.Result!));
                 rs.Result = userList;
             }
+            return Ok(rs);
+        }
+        return BadRequest(rs);
+    }
+
+    [Authorize]
+    [HttpGet("getReceiverActivity/{docId}")]
+    public async Task<IActionResult> GetReceiverActivity(string docId)
+    {
+        var UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var rs = await _documentAPIService.GetReceiverActivity(UserId!, Guid.Parse(docId));
+
+        var userIds = new List<string>();
+        foreach (var activity in rs.Result as List<AuditLog>)
+        {
+            userIds.Add(activity.UserId);
+        }
+
+        var usersRs = await _userService.GetUsersShared(userIds);
+        if (usersRs.IsSuccess) {
+            var userList = JsonConvert.DeserializeObject<IEnumerable<UserDto>>(Convert.ToString(usersRs.Result!));
+            var usLog = new List<UserLogDto>();
+            foreach (var log in rs.Result as List<AuditLog>)
+            {
+               
+                var user = userList!.FirstOrDefault(u => u.ID == log.UserId);
+                if (user != null)
+                {
+                    usLog.Add(new UserLogDto
+                    {
+                        Id = log.Id,
+                        UserEmail = user.Email,
+                        Action = log.Action,
+                        DeviceInfo = log.DeviceInfo,
+                        DocumentId = log.DocumentId,
+                        Timestamp = log.Timestamp,
+                        IpAddress = log.IpAddress
+                    });
+                }
+            }
+            rs.Result = usLog;
+        }
+
+        if (rs.IsSuccess)
+        {
             return Ok(rs);
         }
         return BadRequest(rs);

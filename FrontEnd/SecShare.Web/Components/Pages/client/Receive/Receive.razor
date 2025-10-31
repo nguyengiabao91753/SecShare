@@ -55,103 +55,113 @@
 
     <!-- ------------------- FILE GRID ------------------- -->
     <div class="container mt-3">
-        <div class="row">
-            @if (FilteredFiles?.Any() == true)
-            {
-                foreach (var file in FilteredFiles)
+        @if (isLoading)
+        {
+            <div class="container mt-5 text-center">
+                <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: #007bff;"></i>
+                <p class="mt-2">Loading files...</p>
+            </div>
+        }
+        else
+        {
+            <div class="row">
+                @if (FilteredFiles?.Any() == true)
                 {
-                    <div class="col-md-3 mb-4">
-                        <div class="card-file @(SelectedFile == file ? "active" : "")"
-                             @ondblclick="@(() => OnOpenFile(file))"
-                             @onmouseover="() => isHover = true"
-                             @onmouseout="() => isHover = false"
-                             style="
+                    foreach (var file in FilteredFiles)
+                    {
+                        <div class="col-md-3 mb-4">
+                            <div class="card-file @(SelectedFile == file ? "active" : "")"
+                                 @ondblclick="@(() => OnOpenFile(file))"
+                                 @onmouseover="() => isHover = true"
+                                 @onmouseout="() => isHover = false"
+                                 style="
             position: relative;
             border: 1px solid #ddd;
             border-radius: .5rem;
             overflow: visible;
             transition: box-shadow 0.2s ease;
             @(isHover ? "box-shadow: 0 4px 12px rgba(0,0,0,0.1); cursor: pointer;" : "")
-                 ">
+                                     ">
 
-                            <img class="cover" src="@GetFileIcon(file.FileName)" alt="File Icon"
-                                 style="
+                                <img class="cover" src="@GetFileIcon(file.FileName)" alt="File Icon"
+                                     style="
                 width: 100%;
                 height: 150px;
                 object-fit: contain;
                 background: #f9f9f9;
                 padding: 10px;
-                     " />
+                                         " />
 
-                            <div class="card-body">
-                                <div class="file-title"
-                                     style="
+                                <div class="card-body">
+                                    <div class="file-title"
+                                         style="
                     font-weight: 600;
                     font-size: .95rem;
                     white-space: nowrap;
                     overflow: hidden;
                     text-overflow: ellipsis;
-                         ">
-                                    @file.FileName
-                                </div>
+                                             ">
+                                        @file.FileName
+                                    </div>
 
-                                <div class="file-meta"
-                                     style="
+                                    <div class="file-meta"
+                                         style="
                     font-size: .8rem;
                     color: #666;
-                         ">
-                                    Shared by @file.OwnerEmail • @FormatDate(file.UpdatedAt)
-                                </div>
+                                             ">
+                                        Shared by @file.OwnerEmail • @FormatDate(file.UpdatedAt)
+                                    </div>
 
-                                <div class="action-bar"
-                                     style="
+                                    <div class="action-bar"
+                                         style="
                     display: flex;
                     justify-content: flex-end;
                     gap: .25rem;
                     margin-top: .5rem;
                     position: relative;
-                         ">
-                                    @* <div class="btn-group other-actions" *@
-                                    @*      style="@(SelectedFile == file ? "display: flex;" : "display: none;")"> *@
-                                    @*     <button class="btn btn-sm btn-light btn-preview" *@
-                                    @*             title="Preview" *@
-                                    @*     @onclick:preventDefault *@
-                                    @*     @onclick:stopPropagation *@
-                                    @*             @onclick="() => ShowSidebar(file)"> *@
-                                    @*         <i class="fas fa-eye"></i> *@
-                                    @*     </button> *@
-                                    @* </div> *@
+                                             ">
+                                        @* <div class="btn-group other-actions" *@
+                                        @*      style="@(SelectedFile == file ? "display: flex;" : "display: none;")"> *@
+                                        @*     <button class="btn btn-sm btn-light btn-preview" *@
+                                        @*             title="Preview" *@
+                                        @*     @onclick:preventDefault *@
+                                        @*     @onclick:stopPropagation *@
+                                        @*             @onclick="() => ShowSidebar(file)"> *@
+                                        @*         <i class="fas fa-eye"></i> *@
+                                        @*     </button> *@
+                                        @* </div> *@
 
-                                    <div class="btn-group ml-2">
-                                        <button class="btn btn-sm btn-light dropdown-toggle"
-                                                type="button"
-                                                data-toggle="dropdown"
-                                                aria-haspopup="true"
-                                                aria-expanded="false">
-                                            <i class="fas fa-ellipsis-h"></i>
-                                        </button>
-                                        <div class="dropdown-menu dropdown-menu-right"
-                                             style="z-index: 2200;">
-                                            <button class="dropdown-item" @onclick="() => ShowSidebar(file)">Details</button>
-                                            <button class="dropdown-item" @onclick="() => OnOpenFile(file)">Open</button>
-                                            <button class="dropdown-item">Rename</button>
-                                            <div class="dropdown-divider"></div>
-                                            <button class="dropdown-item text-danger">Delete</button>
+                                        <div class="btn-group ml-2">
+                                            <button class="btn btn-sm btn-light dropdown-toggle"
+                                                    type="button"
+                                                    data-toggle="dropdown"
+                                                    aria-haspopup="true"
+                                                    aria-expanded="false">
+                                                <i class="fas fa-ellipsis-h"></i>
+                                            </button>
+                                            <div class="dropdown-menu dropdown-menu-right"
+                                                 style="z-index: 2200;">
+                                                <button class="dropdown-item" @onclick="() => ShowSidebar(file)">Details</button>
+                                                <button class="dropdown-item" @onclick="() => OnOpenFile(file)">Open</button>
+                                                <button class="dropdown-item">Rename</button>
+                                                <div class="dropdown-divider"></div>
+                                                <button class="dropdown-item text-danger">Delete</button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    }
+                }
+                else
+                {
+                    <div class="col-12 text-center text-muted">
+                        No files found.
                     </div>
                 }
-            }
-            else
-            {
-                <div class="col-12 text-center text-muted">
-                    No files found.
-                </div>
-            }
-        </div>
+            </div>
+        }
     </div>
 
     <!-- ------------------- PAGINATION (placeholder) ------------------- -->
@@ -182,12 +192,12 @@
             overflow-y: auto;
             transition: right 0.3s ease-in-out;
             z-index: 1050;
-             ">
+                     ">
         <div class="sidebar-header"
              style="
                 padding: 1rem;
                 border-bottom: 1px solid #dee2e6;
-                 ">
+                         ">
             <h4>Chi tiết tập tin</h4>
             <button class="close"
                     @onclick="CloseSidebar"
@@ -199,7 +209,7 @@
                         border: none;
                         font-size: 22px;
                         cursor: pointer;
-                        ">
+                                ">
                 &times;
             </button>
         </div>
