@@ -44,6 +44,25 @@ public class DocumentController : ControllerBase
     {
         var UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         var rs = await _documentAPIService.ListReceiveFileAsync(UserId!);
+        var userIds = new List<string>();
+        foreach (var id in rs.Result as List<DocumentDto>)
+        {
+            userIds.Add(id.OwnerEmail);
+        }
+        var usersRs = await _userService.GetUsersShared(userIds);
+
+        if (usersRs.IsSuccess)
+        {
+            var userList = JsonConvert.DeserializeObject<IEnumerable<UserDto>>(Convert.ToString(usersRs.Result!));
+            foreach (var doc in rs.Result as List<DocumentDto>)
+            {
+                var owner = userList!.FirstOrDefault(u => u.ID == doc.OwnerEmail);
+                if (owner != null)
+                {
+                    doc.OwnerEmail = owner.Email;
+                }
+            }
+        }
         if (rs.IsSuccess)
         {
 

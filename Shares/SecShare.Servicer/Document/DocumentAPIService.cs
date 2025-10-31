@@ -166,6 +166,16 @@ public class DocumentAPIService : IDocumentAPIService
             };
         }
 
+        if(sender.Id == receiver.Id)
+        {
+            return new ResponseDTO
+            {
+                IsSuccess = false,
+                Code = "-1",
+                Message = "You cannot share file to yourself!"
+            };
+        }
+
         var document = await _db.Documents.FindAsync(share.DocumentId);
         var origirinalShare = await _db.Shares
             .Where(s => s.DocumentId == share.DocumentId && s.ReceiverId == UserId).FirstOrDefaultAsync();

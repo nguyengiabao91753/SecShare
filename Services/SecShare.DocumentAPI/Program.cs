@@ -9,6 +9,7 @@ using SecShare.SystemConfig.Authentication;
 using SecShare.SystemConfig.Dependencies;
 using SecShare.SystemConfig.Extensions;
 using SecShare.SystemConfig.General;
+using SecShare.SystemConfig.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -63,9 +64,12 @@ if (app.Environment.IsDevelopment())
 }
 app.UseCors("AllowAll");
 
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseMiddleware<AuditMiddleware>();
 
 app.MapControllers();
 ApplyMigration();
